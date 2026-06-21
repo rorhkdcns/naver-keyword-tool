@@ -2,12 +2,11 @@ require('dotenv').config();
 const axios   = require('axios');
 const crypto  = require('crypto');
 const { google } = require('googleapis');
-const fs = require('fs');
 
 // ════════════════════════════════════════════════════════════
 //  환경변수 검증
 // ════════════════════════════════════════════════════════════
-const REQUIRED = ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID','GOOGLE_SHEETS_ID','GOOGLE_SERVICE_ACCOUNT_FILE'];
+const REQUIRED = ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID','GOOGLE_SHEETS_ID','GOOGLE_SERVICE_ACCOUNT_JSON'];
 for (const key of REQUIRED) {
   if (!process.env[key]?.trim()) {
     console.error(`\n❌ 환경변수 누락: ${key}\n`); process.exit(1);
@@ -18,7 +17,7 @@ const _rawSid   = process.env.GOOGLE_SHEETS_ID;
 const _sidMatch = _rawSid.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
 const GOOGLE_SHEETS_ID = _sidMatch ? _sidMatch[1] : _rawSid;
 
-const { NAVER_API_KEY, NAVER_SECRET_KEY, NAVER_CUSTOMER_ID, GOOGLE_SERVICE_ACCOUNT_FILE } = process.env;
+const { NAVER_API_KEY, NAVER_SECRET_KEY, NAVER_CUSTOMER_ID } = process.env;
 const NAVER_BASE = 'https://api.naver.com';
 const RUN_ISO   = new Date().toISOString().replace('T',' ').slice(0,16);
 
@@ -119,26 +118,11 @@ async function fetchAllKeywords() {
 // ════════════════════════════════════════════════════════════
 async function getSheets() {
   let credentials;
-  const saVal = GOOGLE_SERVICE_ACCOUNT_FILE;
-
-  if (fs.existsSync(saVal)) {
-    try {
-      credentials = JSON.parse(fs.readFileSync(saVal, 'utf8'));
-      log('   서비스 계정: 파일에서 로드');
-    } catch (e) {
-      throw new Error(`서비스 계정 파일 파싱 실패 (${saVal}): ${e.message}`);
-    }
-  } else {
-    try {
-      const decoded = Buffer.from(saVal, 'base64').toString('utf8');
-      credentials   = JSON.parse(decoded);
-      log('   서비스 계정: base64 디코딩 성공');
-    } catch (e) {
-      throw new Error(
-        `서비스 계정 base64 디코딩 실패: ${e.message}\n` +
-        `  값 길이: ${saVal.length}자 / 앞 30자: ${saVal.slice(0, 30)}...`
-      );
-    }
+  try {
+    credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
+    log('   서비스 계정: JSON 파싱 성공');
+  } catch (e) {
+    throw new Error(`GOOGLE_SERVICE_ACCOUNT_JSON 파싱 실패: ${e.message}`);
   }
 
   const auth = new google.auth.GoogleAuth({
@@ -203,8 +187,7 @@ async function main() {
   for (const k of ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID'])
     console.log(`   ${k.padEnd(20)}: ${mask(process.env[k])}`);
   console.log(`   ${'GOOGLE_SHEETS_ID'.padEnd(20)}: ${GOOGLE_SHEETS_ID}`);
-  const saDisplay = GOOGLE_SERVICE_ACCOUNT_FILE.length > 60 ? '(base64 JSON)' : GOOGLE_SERVICE_ACCOUNT_FILE;
-  console.log(`   ${'SERVICE_ACCOUNT'.padEnd(20)}: ${saDisplay}\n`);
+  console.log(`   ${'SERVICE_ACCOUNT_JSON'.padEnd(20)}: (설정됨)\n`);
 
   // 1. 키워드 수집
   const keywords = await fetchAllKeywords();
