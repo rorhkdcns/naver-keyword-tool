@@ -133,7 +133,7 @@ async function fetchAllKeywords() {
     const groups  = Array.isArray(grpData) ? grpData : (grpData.adGroups ?? []);
     for (const grp of groups) {
       await delay(100);
-      const kwData = await naverGet('/ncc/keywords', `adgroupId=${grp.nccAdgroupId}`);
+      const kwData = await naverGet('/ncc/keywords', `nccAdgroupId=${grp.nccAdgroupId}`);
       all.push(...(Array.isArray(kwData) ? kwData : (kwData.keywords ?? [])));
     }
     await delay(150);
