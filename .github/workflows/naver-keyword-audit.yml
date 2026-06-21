@@ -28,5 +28,5 @@ jobs:
           NAVER_SECRET_KEY: ${{ secrets.NAVER_SECRET_KEY }}
           NAVER_CUSTOMER_ID: ${{ secrets.NAVER_CUSTOMER_ID }}
           GOOGLE_SHEETS_ID: ${{ secrets.GOOGLE_SHEETS_ID }}
-          GOOGLE_SERVICE_ACCOUNT_FILE: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_FILE }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
         run: node index.js
