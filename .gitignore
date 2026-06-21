@@ -1,0 +1,6 @@
+node_modules/
+.env
+0.env
+*.json
+!package.json
+스프레드시트ID.txt

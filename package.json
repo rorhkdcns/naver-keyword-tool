@@ -1,0 +1,14 @@
+{
+  "name": "naver-keyword-tool",
+  "version": "1.0.0",
+  "description": "네이버 검색광고 키워드 진단 및 Google Sheets 자동 정리 도구",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "dotenv": "^16.4.5",
+    "googleapis": "^140.0.0"
+  }
+}
