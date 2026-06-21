@@ -148,7 +148,6 @@ async function fetchAllKeywords() {
 async function fetchStats(kwIds) {
   log('📊 성과 통계 조회 (최근 30일)...');
   const { since, until } = last30Days();
-  const fields    = ['impCnt','clkCnt','convCnt','avgRnk','salesAmt'];
   const timeRange = JSON.stringify({ since, until });
   const map = {};
 
@@ -158,7 +157,6 @@ async function fetchStats(kwIds) {
     try {
       const params = new URLSearchParams();
       params.append('ids', batch.join(','));
-      for (const f of fields) params.append('fields', f);
       params.append('timeRange', timeRange);
       const res = await axios.get(`${NAVER_BASE}/stats?${params.toString()}`, {
         headers: naverHeaders('GET', '/stats'),
@@ -365,17 +363,28 @@ async function findGapKeywords(relatedMap, competitorDomains, avgBid) {
 // ════════════════════════════════════════════════════════════
 async function getSheets() {
   let credentials;
-  if (fs.existsSync(GOOGLE_SERVICE_ACCOUNT_FILE)) {
-    // 로컬: 파일 경로로 사용
-    credentials = JSON.parse(fs.readFileSync(GOOGLE_SERVICE_ACCOUNT_FILE, 'utf8'));
-  } else {
-    // CI(GitHub Actions): base64 디코딩
+  const saVal = GOOGLE_SERVICE_ACCOUNT_FILE;
+
+  if (fs.existsSync(saVal)) {
     try {
-      credentials = JSON.parse(Buffer.from(GOOGLE_SERVICE_ACCOUNT_FILE, 'base64').toString('utf8'));
-    } catch {
-      throw new Error('서비스 계정 정보를 파일 또는 base64로 읽을 수 없습니다.');
+      credentials = JSON.parse(fs.readFileSync(saVal, 'utf8'));
+      log('   서비스 계정: 파일에서 로드');
+    } catch (e) {
+      throw new Error(`서비스 계정 파일 파싱 실패 (${saVal}): ${e.message}`);
+    }
+  } else {
+    try {
+      const decoded = Buffer.from(saVal, 'base64').toString('utf8');
+      credentials = JSON.parse(decoded);
+      log('   서비스 계정: base64 디코딩 성공');
+    } catch (e) {
+      throw new Error(
+        `서비스 계정 base64 디코딩 실패: ${e.message}\n` +
+        `  값 길이: ${saVal.length}자 / 앞 30자: ${saVal.slice(0, 30)}...`
+      );
     }
   }
+
   const auth = new google.auth.GoogleAuth({
     credentials,
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
