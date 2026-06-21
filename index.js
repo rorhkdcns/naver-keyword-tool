@@ -148,16 +148,21 @@ async function fetchAllKeywords() {
 async function fetchStats(kwIds) {
   log('📊 성과 통계 조회 (최근 30일)...');
   const { since, until } = last30Days();
-  const fields    = 'impCnt,clkCnt,convCnt,avgRnk,salesAmt';
-  const timeRange = encodeURIComponent(JSON.stringify({ since, until }));
+  const fields    = ['impCnt','clkCnt','convCnt','avgRnk','salesAmt'];
+  const timeRange = JSON.stringify({ since, until });
   const map = {};
 
   for (let i = 0; i < kwIds.length; i += 100) {
     const batch = kwIds.slice(i, i+100);
     log(`   통계 ${i+1}–${i+batch.length} / ${kwIds.length}`);
     try {
-      const qs  = `ids=${encodeURIComponent(batch.join(','))}&fields=${fields}&timeRange=${timeRange}`;
-      const res = await axios.get(`${NAVER_BASE}/stats?${qs}`, { headers: naverHeaders('GET','/stats') });
+      const params = new URLSearchParams();
+      params.append('ids', batch.join(','));
+      for (const f of fields) params.append('fields', f);
+      params.append('timeRange', timeRange);
+      const res = await axios.get(`${NAVER_BASE}/stats?${params.toString()}`, {
+        headers: naverHeaders('GET', '/stats'),
+      });
       for (const row of (res.data?.data ?? [])) map[row.id] = row.stat ?? row;
     } catch (e) {
       const info = e.response ? `HTTP ${e.response.status}: ${JSON.stringify(e.response.data)}` : e.message;
@@ -180,13 +185,17 @@ async function fetchKeywordTool(keywords) {
   for (let i = 0; i < uniq.length; i += 100) {
     const batch = uniq.slice(i, i+100);
     try {
-      const res = await naverPost('/keywordstool', { showDetail:1, keywords: batch });
-      for (const item of (res.keywordList ?? [])) {
+      const body = JSON.stringify({ showDetail: 1, hintKeywords: batch, event: null, month: null });
+      const res  = await axios.post(`${NAVER_BASE}/keywordstool`, body, {
+        headers: { ...naverHeaders('POST', '/keywordstool'), 'Content-Type': 'application/json; charset=UTF-8' },
+      });
+      for (const item of (res.data?.keywordList ?? [])) {
         const kw = item.relKeyword ?? item.keyword;
         if (kw) map[kw] = item;
       }
     } catch (e) {
-      log(`   ⚠️ 키워드도구 배치 ${i+1}–${i+batch.length} 실패: ${e.message}`);
+      const info = e.response ? `HTTP ${e.response.status}: ${JSON.stringify(e.response.data)}` : e.message;
+      log(`   ⚠️ 키워드도구 배치 ${i+1}–${i+batch.length} 실패: ${info}`);
     }
     await delay(300);
   }
@@ -272,10 +281,15 @@ async function scrapeNaverAds(keyword) {
       });
       if (ads.length) break;
     }
-    if (!ads.length) log(`   ℹ️  "${keyword}" — 광고 없음 (성인인증 차단 가능)`);
+    if (!ads.length) log(`   ℹ️  "${keyword}" — 광고 없음 (성인인증 차단 또는 광고 없음)`);
     return ads;
   } catch (e) {
-    log(`   ⚠️  "${keyword}" 크롤링 실패: ${e.message}`);
+    const status = e.response?.status;
+    if (status === 403 || status === 401) {
+      log(`   ℹ️  "${keyword}" — 성인인증 차단 (${status}), 건너뜀`);
+    } else {
+      log(`   ⚠️  "${keyword}" 크롤링 실패: ${e.message}`);
+    }
     return [];
   }
 }
@@ -285,10 +299,12 @@ async function trackCompetitorAds(top15) {
   log('🕵️  경쟁사 광고 추적 (상위 15개 키워드)...');
   const adRows = [];
   const domainSet = new Set();
+  let crawlFail = 0;
 
   for (const kw of top15) {
     log(`   검색: "${kw.keyword}"`);
     const ads = await scrapeNaverAds(kw.keyword);
+    if (!ads.length) { crawlFail++; }
     for (const ad of ads) {
       if (ad.domain && ad.domain !== '-') domainSet.add(ad.domain);
       adRows.push({ keyword: kw.keyword, domain: ad.domain, title: ad.title, desc: ad.desc });
@@ -296,6 +312,7 @@ async function trackCompetitorAds(top15) {
     await delay(1500);
   }
 
+  if (crawlFail > 0) log(`   ℹ️  크롤링 미수집 ${crawlFail}건 (성인인증 차단 정상 범위)`);
   const domains = [...domainSet];
   log(`   식별 경쟁사: ${domains.length > 0 ? domains.join(', ') : '없음'}`);
   return { adRows, competitorDomains: domainSet };
