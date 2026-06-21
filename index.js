@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config();  // 로컬 .env 파일 사용 (CI에서는 무시됨)
 const axios   = require('axios');
 const crypto  = require('crypto');
 const cheerio = require('cheerio');
@@ -347,11 +347,21 @@ async function findGapKeywords(relatedMap, competitorDomains, avgBid) {
 //  Google Sheets 헬퍼
 // ════════════════════════════════════════════════════════════
 async function getSheets() {
-  if (!fs.existsSync(GOOGLE_SERVICE_ACCOUNT_FILE))
-    throw new Error(`서비스 계정 파일 없음: ${GOOGLE_SERVICE_ACCOUNT_FILE}`);
+  let credentials;
+  if (fs.existsSync(GOOGLE_SERVICE_ACCOUNT_FILE)) {
+    // 로컬: 파일 경로로 사용
+    credentials = JSON.parse(fs.readFileSync(GOOGLE_SERVICE_ACCOUNT_FILE, 'utf8'));
+  } else {
+    // CI(GitHub Actions): base64 디코딩
+    try {
+      credentials = JSON.parse(Buffer.from(GOOGLE_SERVICE_ACCOUNT_FILE, 'base64').toString('utf8'));
+    } catch {
+      throw new Error('서비스 계정 정보를 파일 또는 base64로 읽을 수 없습니다.');
+    }
+  }
   const auth = new google.auth.GoogleAuth({
-    keyFile: GOOGLE_SERVICE_ACCOUNT_FILE,
-    scopes : ['https://www.googleapis.com/auth/spreadsheets'],
+    credentials,
+    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   });
   return google.sheets({ version: 'v4', auth });
 }
@@ -367,18 +377,36 @@ async function ensureTab(sheets, sid, title) {
   }
 }
 
-// 기존 데이터 전체 삭제 후 최신 데이터 기록
-async function writeTab(sheets, sid, title, rows) {
-  await sheets.spreadsheets.values.clear({ spreadsheetId: sid, range: `${title}!A1:Z200000` });
-  if (rows.length) {
+// 데이터 누적: 헤더가 없으면 헤더 먼저 쓰고, 새 데이터 행만 추가
+async function appendTab(sheets, sid, title, headerRow, dataRows) {
+  let hasHeader = false;
+  try {
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId: sid,
+      range: `${title}!A1:A1`,
+    });
+    hasHeader = !!(res.data.values ?? []).length;
+  } catch {}
+
+  if (!hasHeader) {
     await sheets.spreadsheets.values.update({
       spreadsheetId   : sid,
       range           : `${title}!A1`,
       valueInputOption: 'RAW',
-      resource        : { values: rows },
+      resource        : { values: [headerRow] },
     });
   }
-  log(`✅ "${title}" — ${rows.length - 2}행 기록 (참고정보+헤더 제외)`);
+
+  if (dataRows.length) {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId   : sid,
+      range           : `${title}!A1`,
+      valueInputOption: 'RAW',
+      insertDataOption: 'INSERT_ROWS',
+      resource        : { values: dataRows },
+    });
+  }
+  log(`✅ "${title}" — ${dataRows.length}행 추가 (누적)`);
 }
 
 // ════════════════════════════════════════════════════════════
@@ -393,7 +421,8 @@ async function main() {
   for (const k of ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID'])
     console.log(`   ${k.padEnd(20)}: ${mask(process.env[k])}`);
   console.log(`   ${'GOOGLE_SHEETS_ID'.padEnd(20)}: ${GOOGLE_SHEETS_ID}`);
-  console.log(`   ${'SERVICE_ACCOUNT'.padEnd(20)}: ${GOOGLE_SERVICE_ACCOUNT_FILE}\n`);
+  const saDisplay = GOOGLE_SERVICE_ACCOUNT_FILE.length > 60 ? '(base64 JSON)' : GOOGLE_SERVICE_ACCOUNT_FILE;
+  console.log(`   ${'SERVICE_ACCOUNT'.padEnd(20)}: ${saDisplay}\n`);
 
   // ── 1. 전체 키워드 수집
   const keywords = await fetchAllKeywords();
@@ -456,59 +485,46 @@ async function main() {
     }))
     .sort((a,b) => (b.pcSearch + b.mobileSearch) - (a.pcSearch + a.mobileSearch));
 
-  // ── 9. Google Sheets 기록
-  log('📝 Google Sheets 업데이트...');
+  // ── 9. Google Sheets 기록 (누적 모드: 기존 데이터 유지, 새 행 추가)
+  log('📝 Google Sheets 업데이트 (데이터 누적)...');
   const sheets = await getSheets();
   const TABS   = ['기존키워드_진단','⭐경쟁사는하는데미승인_키워드','신규키워드_후보','경쟁사_광고추적'];
   for (const t of TABS) await ensureTab(sheets, GOOGLE_SHEETS_ID, t);
 
-  // 공통 참고정보 행
-  const infoRow = [
-    '📊 참고정보',
-    `평균 입찰가: ${avgBid.toLocaleString()}원`,
-    `중간값 입찰가: ${medianBid.toLocaleString()}원`,
-    `데이터 수집 일시: ${RUN_ISO}`,
-    `총 키워드: ${keywords.length}개`,
-  ];
-
   // ① 기존키워드_진단
-  await writeTab(sheets, GOOGLE_SHEETS_ID, '기존키워드_진단', [
-    infoRow,
-    ['순번','키워드','노출수','클릭수','전환수','평균노출순위','현재입찰가','월간검색량_PC','월간검색량_모바일','경쟁정도','추천액션'],
-    ...diagnosed.map(d => [
-      d.idx, d.keyword, d.impCnt, d.clkCnt, d.convCnt,
+  await appendTab(sheets, GOOGLE_SHEETS_ID, '기존키워드_진단',
+    ['수집날짜','순번','키워드','노출수','클릭수','전환수','평균노출순위','현재입찰가','월간검색량_PC','월간검색량_모바일','경쟁정도','추천액션'],
+    diagnosed.map(d => [
+      RUN_ISO, d.idx, d.keyword, d.impCnt, d.clkCnt, d.convCnt,
       d.avgRnk ? d.avgRnk.toFixed(2) : '0.00',
       d.bidAmt, d.pcSearch, d.mobileSearch, d.compIdx, d.action,
-    ]),
-  ]);
+    ])
+  );
 
   // ② ⭐경쟁사는하는데미승인_키워드 (우선순위 높은 순)
-  await writeTab(sheets, GOOGLE_SHEETS_ID, '⭐경쟁사는하는데미승인_키워드', [
-    infoRow,
-    ['순번','키워드','월간검색량_PC','월간검색량_모바일','경쟁정도','우선순위점수','추천입찰가(원)','광고중인경쟁사도메인들'],
-    ...gapKeywords.map((g,i) => [
-      i+1, g.keyword, g.pcSearch, g.mobileSearch, g.compIdx,
+  await appendTab(sheets, GOOGLE_SHEETS_ID, '⭐경쟁사는하는데미승인_키워드',
+    ['수집날짜','순번','키워드','월간검색량_PC','월간검색량_모바일','경쟁정도','우선순위점수','추천입찰가(원)','광고중인경쟁사도메인들'],
+    gapKeywords.map((g, i) => [
+      RUN_ISO, i+1, g.keyword, g.pcSearch, g.mobileSearch, g.compIdx,
       g.priorityScore, g.recommendedBid, g.competitorDomains,
-    ]),
-  ]);
+    ])
+  );
 
   // ③ 신규키워드_후보
-  await writeTab(sheets, GOOGLE_SHEETS_ID, '신규키워드_후보', [
-    infoRow,
-    ['순번','신규키워드','월간검색량_PC','월간검색량_모바일','경쟁정도','추천입찰가(원)'],
-    ...newCandidates.map((c,i) => [
-      i+1, c.keyword, c.pcSearch, c.mobileSearch, c.compIdx, c.recommendedBid,
-    ]),
-  ]);
+  await appendTab(sheets, GOOGLE_SHEETS_ID, '신규키워드_후보',
+    ['수집날짜','순번','신규키워드','월간검색량_PC','월간검색량_모바일','경쟁정도','추천입찰가(원)'],
+    newCandidates.map((c, i) => [
+      RUN_ISO, i+1, c.keyword, c.pcSearch, c.mobileSearch, c.compIdx, c.recommendedBid,
+    ])
+  );
 
   // ④ 경쟁사_광고추적
-  await writeTab(sheets, GOOGLE_SHEETS_ID, '경쟁사_광고추적', [
-    infoRow,
-    ['순번','검색키워드','경쟁사도메인','광고제목','광고설명','수집일시'],
-    ...competitorAdRows.map((ad,i) => [
-      i+1, ad.keyword, ad.domain, ad.title, ad.desc, RUN_ISO,
-    ]),
-  ]);
+  await appendTab(sheets, GOOGLE_SHEETS_ID, '경쟁사_광고추적',
+    ['수집날짜','순번','검색키워드','경쟁사도메인','광고제목','광고설명'],
+    competitorAdRows.map((ad, i) => [
+      RUN_ISO, i+1, ad.keyword, ad.domain, ad.title, ad.desc,
+    ])
+  );
 
   // ── 완료 요약
   const counts = {};
