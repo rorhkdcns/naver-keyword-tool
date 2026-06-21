@@ -125,10 +125,12 @@ async function getSheets() {
     throw new Error(`GOOGLE_SERVICE_ACCOUNT_JSON 파싱 실패: ${e.message}`);
   }
 
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ['https://www.googleapis.com/auth/spreadsheets'],
-  });
+  if (credentials.private_key) {
+    credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
+  }
+
+  const auth = await google.auth.fromJSON(credentials);
+  auth.scopes = ['https://www.googleapis.com/auth/spreadsheets'];
   return google.sheets({ version: 'v4', auth });
 }
 
