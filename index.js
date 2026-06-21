@@ -1,25 +1,21 @@
 require('dotenv').config();
-const axios   = require('axios');
-const crypto  = require('crypto');
-const { google } = require('googleapis');
+const axios  = require('axios');
+const crypto = require('crypto');
+const fs     = require('fs');
+const path   = require('path');
 
 // ════════════════════════════════════════════════════════════
 //  환경변수 검증
 // ════════════════════════════════════════════════════════════
-const REQUIRED = ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID','GOOGLE_SHEETS_ID','GOOGLE_SERVICE_ACCOUNT_JSON'];
+const REQUIRED = ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID'];
 for (const key of REQUIRED) {
   if (!process.env[key]?.trim()) {
     console.error(`\n❌ 환경변수 누락: ${key}\n`); process.exit(1);
   }
 }
 
-const _rawSid   = process.env.GOOGLE_SHEETS_ID;
-const _sidMatch = _rawSid.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-const GOOGLE_SHEETS_ID = _sidMatch ? _sidMatch[1] : _rawSid;
-
 const { NAVER_API_KEY, NAVER_SECRET_KEY, NAVER_CUSTOMER_ID } = process.env;
 const NAVER_BASE = 'https://api.naver.com';
-const RUN_ISO   = new Date().toISOString().replace('T',' ').slice(0,16);
 
 // ════════════════════════════════════════════════════════════
 //  유틸리티
@@ -27,6 +23,20 @@ const RUN_ISO   = new Date().toISOString().replace('T',' ').slice(0,16);
 const log   = msg => console.log(`[${new Date().toISOString()}] ${msg}`);
 const delay = ms  => new Promise(r => setTimeout(r, ms));
 const mask  = (v='') => v.length <= 8 ? '****' : v.slice(0,4)+'****'+v.slice(-4);
+
+function dateStamp() {
+  return new Date().toISOString().slice(0,10).replace(/-/g,'');
+}
+
+// CSV 셀 이스케이프: 쉼표·큰따옴표·줄바꿈이 있으면 큰따옴표로 감쌈
+function csvCell(v) {
+  const s = String(v ?? '');
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
+function toCSV(rows) {
+  return rows.map(row => row.map(csvCell).join(',')).join('\n');
+}
 
 // ════════════════════════════════════════════════════════════
 //  네이버 SA API 인증 헤더 (공식 스펙)
@@ -63,7 +73,7 @@ async function naverGet(uri, params = {}) {
 }
 
 // ════════════════════════════════════════════════════════════
-//  캠페인 → 광고그룹 → 키워드 수집 (기본 정보만)
+//  캠페인 → 광고그룹 → 키워드 수집
 // ════════════════════════════════════════════════════════════
 async function fetchAllKeywords() {
   log('📋 캠페인 목록 조회...');
@@ -92,14 +102,12 @@ async function fetchAllKeywords() {
 
       for (const kw of kws) {
         all.push({
-          campaignName : campName,
-          adGroupName  : grpName,
-          keyword      : kw.keyword ?? '',
-          nccKeywordId : kw.nccKeywordId ?? '',
-          bidAmt       : Number(kw.bidAmt ?? 0),
-          useGroupBid  : kw.useGroupBidAmt ? 'Y' : 'N',
-          status       : kw.userLock ? '중지' : '운영중',
-          inspectStatus: kw.inspectStatus ?? '-',
+          keyword     : kw.keyword       ?? '',
+          campaignName: campName,
+          adGroupName : grpName,
+          keywordId   : kw.nccKeywordId  ?? '',
+          bidAmt      : Number(kw.bidAmt ?? 0),
+          status      : kw.userLock ? '중지' : '운영중',
         });
       }
 
@@ -114,66 +122,26 @@ async function fetchAllKeywords() {
 }
 
 // ════════════════════════════════════════════════════════════
-//  Google Sheets 헬퍼
+//  CSV 저장
 // ════════════════════════════════════════════════════════════
-async function getSheets() {
-  let credentials;
-  try {
-    credentials = JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_JSON);
-    log('   서비스 계정: JSON 파싱 성공');
-  } catch (e) {
-    throw new Error(`GOOGLE_SERVICE_ACCOUNT_JSON 파싱 실패: ${e.message}`);
-  }
+function saveCSV(keywords) {
+  const dir      = path.join(__dirname, 'data');
+  const filename = `keyword-audit-${dateStamp()}.csv`;
+  const filepath = path.join(dir, filename);
 
-  if (credentials.private_key) {
-    credentials.private_key = credentials.private_key.replace(/\\n/g, '\n');
-  }
+  fs.mkdirSync(dir, { recursive: true });
 
-  const auth = await google.auth.fromJSON(credentials);
-  auth.scopes = ['https://www.googleapis.com/auth/spreadsheets'];
-  return google.sheets({ version: 'v4', auth });
-}
+  const header = ['키워드','캠페인명','광고그룹명','키워드ID','입찰가','상태'];
+  const rows   = keywords.map(k => [
+    k.keyword, k.campaignName, k.adGroupName, k.keywordId, k.bidAmt, k.status,
+  ]);
 
-async function ensureTab(sheets, sid, title) {
-  const meta = await sheets.spreadsheets.get({ spreadsheetId: sid });
-  if (!meta.data.sheets.some(s => s.properties.title === title)) {
-    await sheets.spreadsheets.batchUpdate({
-      spreadsheetId: sid,
-      resource: { requests: [{ addSheet: { properties: { title } } }] },
-    });
-    log(`   탭 생성: "${title}"`);
-  }
-}
+  // UTF-8 BOM 추가 (Excel에서 한글 깨짐 방지)
+  const bom     = '﻿';
+  const content = bom + toCSV([header, ...rows]);
+  fs.writeFileSync(filepath, content, 'utf8');
 
-async function appendTab(sheets, sid, title, headerRow, dataRows) {
-  let hasHeader = false;
-  try {
-    const res = await sheets.spreadsheets.values.get({
-      spreadsheetId: sid,
-      range        : `${title}!A1:A1`,
-    });
-    hasHeader = !!(res.data.values ?? []).length;
-  } catch {}
-
-  if (!hasHeader) {
-    await sheets.spreadsheets.values.update({
-      spreadsheetId   : sid,
-      range           : `${title}!A1`,
-      valueInputOption: 'RAW',
-      resource        : { values: [headerRow] },
-    });
-  }
-
-  if (dataRows.length) {
-    await sheets.spreadsheets.values.append({
-      spreadsheetId   : sid,
-      range           : `${title}!A1`,
-      valueInputOption: 'RAW',
-      insertDataOption: 'INSERT_ROWS',
-      resource        : { values: dataRows },
-    });
-  }
-  log(`✅ "${title}" — ${dataRows.length}행 추가`);
+  return { filepath, filename };
 }
 
 // ════════════════════════════════════════════════════════════
@@ -181,15 +149,14 @@ async function appendTab(sheets, sid, title, headerRow, dataRows) {
 // ════════════════════════════════════════════════════════════
 async function main() {
   console.log('\n' + '═'.repeat(52));
-  console.log('  네이버 키워드광고 키워드 수집 → Google Sheets');
+  console.log('  네이버 키워드광고 키워드 수집 → CSV');
   console.log(`  실행: ${new Date().toLocaleString('ko-KR')}`);
   console.log('═'.repeat(52));
 
   console.log('\n📁 환경변수 확인:');
   for (const k of ['NAVER_API_KEY','NAVER_SECRET_KEY','NAVER_CUSTOMER_ID'])
     console.log(`   ${k.padEnd(20)}: ${mask(process.env[k])}`);
-  console.log(`   ${'GOOGLE_SHEETS_ID'.padEnd(20)}: ${GOOGLE_SHEETS_ID}`);
-  console.log(`   ${'SERVICE_ACCOUNT_JSON'.padEnd(20)}: (설정됨)\n`);
+  console.log('');
 
   // 1. 키워드 수집
   const keywords = await fetchAllKeywords();
@@ -198,32 +165,15 @@ async function main() {
     return;
   }
 
-  // 2. Google Sheets 저장
-  log('📝 Google Sheets 업데이트...');
-  const sheets = await getSheets();
-  const TAB    = '키워드_목록';
-
-  await ensureTab(sheets, GOOGLE_SHEETS_ID, TAB);
-  await appendTab(
-    sheets, GOOGLE_SHEETS_ID, TAB,
-    ['수집날짜','캠페인','광고그룹','키워드','키워드ID','입찰가','그룹입찰가사용','상태','심사상태'],
-    keywords.map(k => [
-      RUN_ISO,
-      k.campaignName,
-      k.adGroupName,
-      k.keyword,
-      k.nccKeywordId,
-      k.bidAmt,
-      k.useGroupBid,
-      k.status,
-      k.inspectStatus,
-    ])
-  );
+  // 2. CSV 저장
+  const { filepath, filename } = saveCSV(keywords);
 
   console.log('\n' + '═'.repeat(52));
   console.log(`  총 키워드: ${keywords.length}개`);
+  console.log(`  CSV 저장 완료: data/${filename} (${keywords.length}개 키워드)`);
+  console.log('  GitHub에 커밋 가능: git add data/*.csv');
   console.log('✅ 완료!');
-  console.log(`   https://docs.google.com/spreadsheets/d/${GOOGLE_SHEETS_ID}\n`);
+  console.log('═'.repeat(52) + '\n');
 }
 
 main().catch(err => {
