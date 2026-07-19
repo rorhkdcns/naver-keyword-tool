@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TH COMPANY · 콘트롤타워</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<style>
+@font-face {
+  font-family: 'Pretendard';
+  src: url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/woff2/PretendardVariable.woff2') format('woff2-variations');
+  font-weight: 45 920;
+}
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#ffffff;
+  --bg-soft:#f7f8fa;
+  --panel:#ffffff;
+  --panel-2:#f4f5f7;
+  --border:#d4d8e0;
+  --border-soft:#e5e8ee;
+  --text:#1c2333;
+  --text-dim:#555f75;
+  --text-faint:#8a93a8;
+  --accent:#b07818;
+  --accent-strong:#8f5f0d;
+  --accent-bg:#fdf6e8;
+  --ok:#0f9d6c;
+  --warn:#c98a06;
+  --issue:#d13d1e;
+  --violet:#5b48c9;
+  --violet-bg:#f1eefc;
+  --font-body:'Pretendard', -apple-system, 'Malgun Gothic', sans-serif;
+  --font-mono:'IBM Plex Mono', 'D2Coding', monospace;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  min-height:100vh;
+  font-size:15px;
+}
+.wrap{ max-width:1180px; margin:0 auto; padding:28px 20px 80px; }
+
+header{
+  display:flex; justify-content:space-between; align-items:flex-end;
+  border-bottom:2px solid var(--text);
+  padding-bottom:18px; margin-bottom:22px;
+  flex-wrap:wrap; gap:14px;
+}
+.brand{ display:flex; align-items:center; gap:12px; }
+.brand-mark{
+  width:40px; height:40px; border:2px solid var(--text);
+  border-radius:4px; display:flex; align-items:center; justify-content:center;
+  font-family:var(--font-mono); font-weight:600; color:var(--text); font-size:14px;
+  background:var(--accent-bg);
+}
+.brand h1{ font-size:20px; font-weight:800; letter-spacing:-0.2px; }
+.brand p{ font-size:12px; color:var(--text-dim); margin-top:2px; font-family:var(--font-mono); }
+.clock{ text-align:right; font-family:var(--font-mono); }
+.clock .time{ font-size:23px; color:var(--text); font-weight:600; letter-spacing:1px; }
+.clock .date{ font-size:12.5px; color:var(--text-dim); margin-top:2px; }
+
+.quicklinks{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; align-items:center; }
+.qlink{
+  font-size:13px; padding:7px 12px; border:1px solid var(--border);
+  border-radius:4px; color:var(--text-dim); text-decoration:none;
+  background:var(--bg-soft); transition:.15s; font-family:var(--font-mono);
+}
+.qlink:hover{ border-color:var(--accent); color:var(--accent-strong); background:var(--accent-bg); }
+.qlink.settings-btn{ margin-left:auto; border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.qlink.settings-btn:hover{ background:#e6e0fa; }
+
+.settings-panel{
+  display:none; background:var(--violet-bg); border:1px solid var(--violet);
+  border-radius:6px; padding:16px 18px; margin-bottom:22px; gap:12px; flex-direction:column;
+}
+.settings-panel h3{ font-size:14px; color:var(--violet); font-family:var(--font-mono); margin-bottom:2px; }
+.settings-panel .hint{ font-size:12.5px; color:var(--text-dim); line-height:1.5; }
+.settings-row{ display:flex; gap:10px; flex-wrap:wrap; }
+.settings-row .field{ flex:1; min-width:200px; display:flex; flex-direction:column; gap:5px; }
+.settings-row label{ font-size:11.5px; color:var(--text-dim); font-family:var(--font-mono); font-weight:600; }
+
+.priority{
+  border:1px solid #e8d9b8; background:var(--accent-bg);
+  border-radius:6px; padding:18px 20px; margin-bottom:28px;
+  position:relative; overflow:hidden;
+}
+.priority::before{ content:''; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--accent); }
+.priority h2{ font-size:15px; letter-spacing:0.3px; color:var(--text); font-weight:800; margin-bottom:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+.priority h2 .tag{ font-family:var(--font-mono); font-size:10.5px; color:var(--accent-strong); border:1px solid #e8d9b8; background:#fff; padding:2px 6px; border-radius:3px; font-weight:400; }
+.priority input[type=text]{ background:#fff; }
+#priorityList{ display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+.pitem{ display:flex; align-items:center; gap:10px; font-size:14.5px; padding:6px 4px; border-radius:4px; }
+.pitem:hover{ background:rgba(176,120,24,0.07); }
+.pitem input[type=checkbox]{ accent-color: var(--accent); width:16px; height:16px; cursor:pointer; flex-shrink:0;}
+.pitem span{ flex:1; }
+.pitem.done span{ color:var(--text-faint); text-decoration:line-through; }
+.pitem .del{ opacity:0; cursor:pointer; color:var(--issue); font-size:12.5px; font-family:var(--font-mono); }
+.pitem:hover .del{ opacity:0.8; }
+.pitem .del:hover{ opacity:1; }
+.addrow{ display:flex; gap:8px; }
+.addrow input{ flex:1; }
+
+input[type=text], input[type=password], textarea, select{
+  background:var(--bg); border:1px solid var(--border); color:var(--text);
+  border-radius:4px; padding:8px 11px; font-family:var(--font-body); font-size:14px;
+  outline:none; width:100%;
+}
+input[type=text]:focus, input[type=password]:focus, textarea:focus, select:focus{ border-color:var(--accent); box-shadow:0 0 0 2px rgba(176,120,24,0.12); }
+input[readonly]{ background:var(--panel-2); color:var(--text-dim); }
+button.mini{
+  background:var(--bg); border:1px solid var(--border); color:var(--text);
+  border-radius:4px; padding:8px 14px; font-size:13.5px; font-weight:600; cursor:pointer; font-family:var(--font-body);
+  transition:.15s; white-space:nowrap;
+}
+button.mini:hover{ border-color:var(--accent); background:var(--accent-bg); color:var(--accent-strong); }
+button.mini:disabled{ opacity:0.45; cursor:not-allowed; }
+button.mini.violet{ color:#fff; background:var(--violet); border-color:var(--violet); }
+button.mini.violet:hover{ background:#4a38b3; border-color:#4a38b3; color:#fff; }
+
+.tabbar{ display:flex; gap:4px; border-bottom:2px solid var(--text); margin-bottom:16px; flex-wrap:wrap; }
+.tab{
+  font-family:var(--font-body); font-weight:700; font-size:14.5px; padding:10px 20px; cursor:pointer;
+  color:var(--text-dim); border:1px solid transparent; border-bottom:none;
+  border-radius:5px 5px 0 0; position:relative; top:2px; transition:.15s;
+}
+.tab .dot{ display:inline-block; width:7px; height:7px; border-radius:50%; margin-right:8px; }
+.tab:hover{ color:var(--text); background:var(--bg-soft); }
+.tab.active{ color:var(--text); background:var(--bg); border-color:var(--text); border-bottom:2px solid var(--bg); }
+.tab-add{ font-family:var(--font-body); font-size:13px; padding:10px 14px; color:var(--text-faint); cursor:pointer; font-weight:600; }
+.tab-add:hover{ color:var(--accent-strong); }
+.tab.tool-tab{ color:var(--violet); }
+.tab.tool-tab:hover{ background:var(--violet-bg); }
+.tab.tool-tab.active{ color:var(--violet); background:var(--bg); border-color:var(--text); border-bottom:2px solid var(--bg); }
+
+.preset-bar{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.preset-chip{
+  display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600;
+  padding:6px 12px; border:1px solid var(--border); border-radius:4px; cursor:pointer;
+  background:var(--bg); color:var(--text-dim); transition:.15s;
+}
+.preset-chip:hover{ border-color:var(--violet); color:var(--violet); }
+.preset-chip.active{ border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.preset-chip .num{
+  font-family:var(--font-mono); font-size:11px; background:var(--panel-2); border-radius:3px;
+  padding:1px 6px; color:var(--text-faint);
+}
+.preset-chip.active .num{ background:var(--violet); color:#fff; }
+.gen-gallery{ display:flex; flex-wrap:wrap; gap:12px; }
+.gen-gallery .gitem{ width:220px; border:1px solid var(--border); border-radius:4px; background:var(--bg); padding:8px; display:flex; flex-direction:column; gap:6px; }
+.gen-gallery .gitem img{ width:100%; border-radius:3px; }
+.gen-gallery .gitem .gprompt{ font-size:11px; color:var(--text-faint); line-height:1.4; max-height:44px; overflow:hidden; }
+
+.account-table-wrap{ overflow-x:auto; border:1px solid var(--border); border-radius:4px; }
+.account-table{ width:100%; border-collapse:collapse; font-size:13.5px; min-width:640px; }
+.account-table thead th{
+  text-align:left; font-family:var(--font-mono); font-size:11px; font-weight:700; text-transform:uppercase;
+  color:var(--text-dim); background:var(--bg-soft); border-bottom:1px solid var(--border);
+  padding:9px 12px; white-space:nowrap;
+}
+.account-table tbody td{ padding:10px 12px; border-bottom:1px solid var(--border-soft); vertical-align:middle; }
+.account-table tbody tr:last-child td{ border-bottom:none; }
+.account-table tbody tr:hover{ background:var(--bg-soft); }
+.account-table .acc-name{ font-weight:700; }
+.account-table .acc-cat{
+  display:inline-block; margin-top:2px; font-size:10px; font-family:var(--font-mono); color:var(--violet);
+  background:var(--violet-bg); border:1px solid #ddd6fa; padding:1px 6px; border-radius:3px; font-weight:600;
+  cursor:pointer;
+}
+.account-table .acc-cat:hover{ background:#e6e0fa; border-color:var(--violet); }
+.preset-chip.cat-manage{ display:inline-flex; align-items:center; gap:6px; padding-right:6px; cursor:grab; }
+.preset-chip.cat-manage:active{ cursor:grabbing; }
+.preset-chip.cat-manage .cat-edit, .preset-chip.cat-manage .cat-del{
+  opacity:0; font-size:11px; padding:1px 3px; border-radius:2px; cursor:pointer; color:var(--text-faint);
+}
+.preset-chip.cat-manage:hover .cat-edit, .preset-chip.cat-manage:hover .cat-del{ opacity:1; }
+.preset-chip.cat-manage .cat-edit:hover{ color:var(--accent-strong); }
+.preset-chip.cat-manage .cat-del:hover{ color:var(--issue); }
+.account-table .acc-url-link{ font-size:12.5px; font-family:var(--font-mono); color:var(--text-dim); text-decoration:none; }
+.account-table .acc-url-link:hover{ color:var(--accent-strong); }
+.account-table .acc-mono{ font-family:var(--font-mono); font-size:13px; }
+.account-table .acc-empty{ color:var(--text-faint); }
+.account-table .acc-cell-copy{ display:flex; align-items:center; gap:6px; white-space:nowrap; }
+.account-table .acc-copy-btn{ font-size:11px; padding:3px 8px; }
+.account-table .acc-note-cell{ color:var(--text-dim); font-size:12.5px; max-width:220px; }
+.account-filter-bar{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:4px; }
+
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(28,35,51,0.5);
+  display:none; align-items:center; justify-content:center; z-index:1000; padding:20px;
+}
+.modal-overlay.open{ display:flex; }
+.modal-box{
+  background:#fff; border-radius:6px; border:1px solid var(--border);
+  width:100%; max-width:460px; max-height:88vh; overflow-y:auto;
+  padding:22px 24px; box-shadow:0 12px 36px rgba(28,35,51,0.25);
+}
+.modal-box h3{ font-size:16px; font-weight:800; margin-bottom:16px; }
+.modal-field{ margin-bottom:12px; display:flex; flex-direction:column; gap:5px; }
+.modal-field label{ font-size:11.5px; font-weight:700; color:var(--text-dim); font-family:var(--font-mono); text-transform:uppercase; }
+.modal-field textarea{ min-height:70px; }
+.modal-actions{ display:flex; gap:8px; justify-content:flex-end; margin-top:18px; }
+
+.subtabbar{ margin-bottom:18px; }
+.subtab{
+  font-size:13px; padding:7px 14px; border-radius:4px; cursor:pointer;
+  border:1px solid var(--border); color:var(--text-dim); background:var(--bg);
+  display:flex; align-items:center; gap:7px; transition:.15s; font-weight:600;
+}
+.subtab .led-mini{ width:8px; height:8px; border-radius:50%; }
+.subtab:hover{ border-color:var(--text-dim); color:var(--text); }
+.subtab.active{ border-color:var(--accent-strong); color:var(--accent-strong); background:var(--accent-bg); }
+.subtab[draggable="true"]{ cursor:grab; }
+.subtab[draggable="true"]:active{ cursor:grabbing; }
+.subtab.group-pill.active{ border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+.subtab-add{ font-size:13px; padding:7px 14px; border-radius:4px; border:1px dashed var(--border); color:var(--text-faint); cursor:pointer; font-weight:600; }
+.subtab-add:hover{ color:var(--accent-strong); border-color:var(--accent); }
+
+#contentArea{ min-height:120px; }
+.card{
+  background:var(--panel); border:1px solid var(--border); border-radius:6px;
+  padding:22px 24px 22px; display:flex; flex-direction:column; gap:18px;
+  position:relative;
+  box-shadow:0 1px 3px rgba(28,35,51,0.06);
+}
+.card-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px;}
+.card-title{ display:flex; align-items:center; gap:10px; }
+.led{
+  width:13px; height:13px; border-radius:50%; cursor:pointer; flex-shrink:0; margin-top:2px;
+  border:1px solid rgba(0,0,0,0.1); transition:.2s;
+}
+.led.ok{ background:var(--ok); }
+.led.warn{ background:var(--warn); }
+.led.issue{ background:var(--issue); }
+.card-title h3{ font-size:19px; font-weight:800; letter-spacing:-0.2px; }
+.status-label{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-dim); margin-left:23px; }
+.card-remove{ font-family:var(--font-mono); font-size:11.5px; color:var(--text-faint); cursor:pointer; }
+.card-remove:hover{ color:var(--issue); }
+
+.card-links{ display:flex; flex-wrap:wrap; gap:6px; align-items:center; }
+.card-links a{
+  font-size:12.5px; color:var(--text-dim); text-decoration:none; font-family:var(--font-mono);
+  border:1px solid var(--border); background:var(--bg-soft); padding:5px 10px; border-radius:4px;
+}
+.card-links a:hover{ color:var(--accent-strong); border-color:var(--accent); background:var(--accent-bg); }
+.link-del{ display:none; color:var(--issue); font-weight:700; }
+.card-links a:hover .link-del{ display:inline; }
+.link-add{ border:1px dashed var(--border); padding:5px 10px; border-radius:4px; font-size:12.5px; color:var(--text-faint); cursor:pointer; font-family:var(--font-mono); background:var(--bg);}
+.link-add:hover{ color:var(--accent-strong); border-color:var(--accent); }
+
+.card-body{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:22px; }
+@media (max-width:680px){ .card-body{ grid-template-columns:1fr; } }
+
+.todo-list{ display:flex; flex-direction:column; gap:4px; }
+.todo-item{ display:flex; align-items:center; gap:8px; font-size:14px; padding:2px 0; }
+.todo-item input[type=checkbox]{ accent-color:var(--accent); width:15px; height:15px; cursor:pointer; flex-shrink:0;}
+.todo-item span{ flex:1; }
+.todo-item.done span{ color:var(--text-faint); text-decoration:line-through; }
+.todo-item .del{ opacity:0; cursor:pointer; color:var(--issue); font-size:12px; }
+.todo-item:hover .del{ opacity:0.7; }
+
+.card textarea{ min-height:110px; resize:vertical; font-size:14px; line-height:1.65; }
+.mini-addrow{ display:flex; gap:6px; align-items:center; }
+.mini-addrow input{ flex:1; font-size:13px; padding:7px 10px; }
+
+.section-label{ font-size:11.5px; color:var(--text-dim); font-family:var(--font-mono); font-weight:600; letter-spacing:0.5px; margin-bottom:8px; text-transform:uppercase;}
+.section-label.ai{ color:var(--violet); font-size:12px; }
+.section-label .edit-link{ cursor:pointer; color:var(--text-faint); font-weight:400; margin-left:8px; text-transform:none; }
+.section-label .edit-link:hover{ color:var(--accent-strong); }
+
+.ai-panel{ border-top:1px solid var(--border-soft); padding-top:18px; display:flex; flex-direction:column; gap:14px; background:var(--violet-bg); margin:0 -24px -22px; padding:18px 24px 22px; border-radius:0 0 6px 6px; }
+.ai-panel img{ max-width:100%; border-radius:4px; border:1px solid var(--border); display:block; }
+
+.attach-grid{ display:flex; flex-wrap:wrap; gap:10px; }
+.attach-item{
+  width:150px; border:1px solid var(--border); border-radius:4px; background:var(--bg);
+  padding:6px; display:flex; flex-direction:column; gap:6px;
+}
+.attach-item img{ width:100%; height:96px; object-fit:cover; border-radius:3px; border:none; }
+.attach-item .attach-actions{ display:flex; gap:4px; }
+.attach-item .attach-actions button{ flex:1; font-size:11px; padding:4px 2px; }
+.attach-drop{
+  border:1.5px dashed var(--border); border-radius:4px; padding:16px; text-align:center;
+  color:var(--text-faint); font-size:13px; cursor:pointer; background:var(--bg); transition:.15s;
+}
+.attach-drop:hover, .attach-drop.dragover{ border-color:var(--violet); color:var(--violet); background:var(--violet-bg); }
+
+.admin-panel{ border-top:1px solid var(--border-soft); padding-top:18px; display:flex; flex-direction:column; gap:10px; }
+
+.empty-cat{
+  border:1.5px dashed var(--border); border-radius:6px; padding:40px 20px;
+  text-align:center; color:var(--text-faint); font-size:14px; background:var(--bg-soft);
+}
+.empty-cat button{ margin-top:14px; }
+
+footer{ text-align:center; margin-top:34px; font-size:12px; color:var(--text-faint); font-family:var(--font-mono); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">TH</div>
+      <div>
+        <h1>TH COMPANY 콘트롤타워</h1>
+        <p>MULTI-VENTURE CONTROL PANEL · <span id="syncStatus" style="color:var(--text-faint);">로컬 모드</span></p>
+      </div>
+    </div>
+    <div class="clock">
+      <div class="time" id="clockTime">--:--</div>
+      <div class="date" id="clockDate">----</div>
+    </div>
+  </header>
+
+  <div class="quicklinks" id="quicklinks"></div>
+
+  <div class="settings-panel" id="settingsPanel">
+    <h3>⚙ AI 글쓰기 API 설정 (Gemini)</h3>
+    <div class="hint">API 키는 이 브라우저의 localStorage에만 저장되고, Google Gemini API로 직접 전송됩니다. 이 화면 밖으로 나가지 않습니다.</div>
+    <div class="settings-row">
+      <div class="field">
+        <label>GEMINI API KEY</label>
+        <input type="password" id="settingsApiKey" placeholder="AIza...">
+      </div>
+      <div class="field">
+        <label>텍스트 모델</label>
+        <input type="text" id="settingsTextModel" placeholder="gemini-2.5-flash">
+      </div>
+      <div class="field">
+        <label>이미지 모델 (나노바나나2)</label>
+        <input type="text" id="settingsImageModel" placeholder="gemini-3.1-flash-image">
+      </div>
+    </div>
+    <div style="display:flex; gap:6px; align-items:center; flex-wrap:wrap;">
+      <button class="mini violet" onclick="saveSettings()">저장</button>
+      <button class="mini" id="testConnBtn" onclick="testConnection()">연결 테스트</button>
+      <span style="border-left:1px solid var(--border); height:20px; margin:0 4px;"></span>
+      <button class="mini" onclick="exportData()">📤 데이터 내보내기</button>
+      <button class="mini" onclick="document.getElementById('importFileInput').click()">📥 데이터 가져오기</button>
+      <input type="file" id="importFileInput" accept=".json" style="display:none;" onchange="importData(this.files)">
+      <span id="testConnResult" style="font-size:12.5px;"></span>
+    </div>
+    <div style="border-top:1px solid var(--border); margin-top:6px; padding-top:12px;">
+      <h3 style="margin-bottom:8px;">🔄 기기 간 동기화 (Supabase · 선택)</h3>
+      <div class="hint" style="margin-bottom:10px;">설정하면 할일·메모·프롬프트 지침이 모든 기기에서 동일하게 유지됩니다. <b>Gemini API 키와 관리자 아이디/비밀번호는 보안을 위해 서버로 보내지 않으며 기기마다 따로 입력</b>해야 합니다.</div>
+      <div class="settings-row">
+        <div class="field">
+          <label>SUPABASE URL</label>
+          <input type="text" id="settingsSbUrl" placeholder="https://xxxx.supabase.co">
+        </div>
+        <div class="field">
+          <label>ANON PUBLIC 키</label>
+          <input type="password" id="settingsSbKey" placeholder="eyJ...">
+        </div>
+        <div class="field">
+          <label>동기화 ID (아무나 못 맞출 긴 문자열)</label>
+          <input type="text" id="settingsSyncId" placeholder="예: yoo-tower-x8k2p9q7">
+        </div>
+      </div>
+      <div style="display:flex; gap:6px; align-items:center; margin-top:10px; flex-wrap:wrap;">
+        <button class="mini" onclick="testSyncConnection()">동기화 연결 테스트</button>
+        <button class="mini violet" onclick="makeSyncLink()">🔗 동기화 링크 만들기</button>
+        <span id="syncTestResult" style="font-size:12.5px;"></span>
+      </div>
+      <div id="syncLinkResult" style="margin-top:8px;"></div>
+    </div>
+  </div>
+
+  <div class="priority">
+    <h2>오늘 우선순위 <span class="tag">GLOBAL</span>
+      <span style="margin-left:auto;"><button class="mini violet" style="font-size:12px;padding:5px 10px;" onclick="toggleExtractPanel()">🤖 대화에서 할 일 추출</button></span>
+    </h2>
+    <div id="extractPanel" style="display:none; margin-bottom:14px; padding:12px; background:#fff; border:1px solid var(--violet); border-radius:4px;">
+      <div style="font-size:12.5px; color:var(--text-dim); margin-bottom:8px; line-height:1.5;">
+        Claude나 제미나이와 나눈 대화를 복사해서 아래에 붙여넣으세요. AI가 형이 직접 해야 할 일만 걸러냅니다.
+      </div>
+      <textarea id="extractInput" style="min-height:120px; background:var(--panel-2);" placeholder="대화 내용 붙여넣기 (길어도 괜찮음)"></textarea>
+      <div style="margin-top:8px; display:flex; gap:6px; align-items:center;">
+        <button class="mini violet" id="extractBtn" onclick="extractTodos()">할 일 추출</button>
+        <button class="mini" onclick="toggleExtractPanel()">닫기</button>
+      </div>
+      <div id="extractResult" style="margin-top:10px;"></div>
+    </div>
+    <div id="priorityList"></div>
+    <div class="addrow">
+      <input type="text" id="priorityInput" placeholder="할 일 입력 후 Enter">
+      <button class="mini" onclick="addPriority()">추가</button>
+    </div>
+  </div>
+
+  <div class="tabbar" id="tabbar"></div>
+  <div class="subtabbar" id="subtabbar"></div>
+  <div id="contentArea"></div>
+
+  <footer>모든 데이터는 이 브라우저(localStorage)에만 저장됩니다 · 서버 전송 없음 · API 키/비밀번호는 Google Gemini 및 각 사이트로만 직접 전송됩니다</footer>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<script>
+const STORAGE_KEY_V4 = 'th_control_tower_v4';
+const STORAGE_KEY_V3 = 'th_control_tower_v3';
+
+const CATEGORIES = [
+  {id:'gillmong', label:'길몽상점'},
+  {id:'veluna',   label:'벨루나'},
+  {id:'blog',     label:'블로그'},
+  {id:'other',    label:'기타'},
+];
+const BLOG_GROUPS = [
+  {id:'blogspot', label:'블로그스팟 (자동화)'},
+  {id:'naver',    label:'네이버블로그 (AI 글쓰기)'},
+];
+
+const defaultData = {
+  activeCategory: 'gillmong',
+  activeBlogGroup: 'blogspot',
+  activeVenture: { gillmong:'gillmong', veluna:'veluna', blog:'errorblog', other:'naverad' },
+  settings: { geminiApiKey:'', textModel:'gemini-2.5-flash', imageModel:'gemini-3.1-flash-image', supabaseUrl:'', supabaseKey:'', syncId:'' },
+  imagePresets: [],
+  activeImagePresetId: null,
+  accounts: [],
+  accountCategories: ['호스팅/도메인','개발/API','광고','금융','기타'],
+  quicklinks: [
+    {label:'GitHub', url:'https://github.com/rorhkdcns'},
+    {label:'Vercel', url:'https://vercel.com/dashboard'},
+    {label:'Search Console', url:'https://search.google.com/search-console'},
+    {label:'네이버 광고관리시스템', url:'https://searchad.naver.com/'},
+    {label:'네이버 블로그 글쓰기', url:'https://blog.naver.com/GoBlogWrite.naver'},
+    {label:'Supabase', url:'https://supabase.com/dashboard/projects'},
+  ],
+  priorities: [
+    {text:'error.gwangchoon.com 구글 인덱싱 현황 확인', done:false},
+  ],
+  ventures: [
+    {
+      id:'gillmong', category:'gillmong', name:'길몽상점 (gillmong.com)', status:'ok',
+      links:[{label:'사이트', url:'https://gillmong.com'},{label:'GitHub', url:'https://github.com/rorhkdcns/gillmong'}],
+      todos:[
+        {text:'히어로 문구 "좋은 꿈은 사고팔 수 있습니다" 반영 여부 확정', done:false},
+        {text:'상품 카드 - 제목/카테고리태그/감정태그만 남기기', done:false},
+      ],
+      note:'MVP 배포 완료. 결제는 NicePay 에스크로(수수료 20%) 구조.',
+      adminUrl:'', adminId:'', adminPw:'', adminEmbedOpen:false, showPw:false
+    },
+    {
+      id:'errorblog', category:'blog', group:'blogspot', name:'에러 해결 블로그 (error.gwangchoon.com)', status:'warn',
+      links:[{label:'사이트', url:'https://error.gwangchoon.com'},{label:'Search Console', url:'https://search.google.com/search-console'}],
+      todos:[ {text:'사이트맵 인덱싱 결과 확인 (제출 후 1~2주 대기중)', done:false} ],
+      note:'9개 포스트 발행 완료. gwangchoon.com Gemini+GitHub Actions 파이프라인이 핵심 도구.'
+    },
+    {
+      id:'carblog', category:'blog', group:'blogspot', name:'자동차 블로그 (car.gwangchoon.com)', status:'issue',
+      links:[{label:'사이트', url:'https://car.gwangchoon.com'},{label:'GitHub', url:'https://github.com/rorhkdcns'}],
+      todos:[ {text:'토큰 재발급: get_token.py 실행 → 로그인/승인 → token_base64.txt → GitHub Secrets 교체 → 워크플로우 재실행', done:false} ],
+      note:'자동 발행 스크립트는 완성/정상. 토큰 재발급만 하면 재가동.'
+    },
+    {
+      id:'naverblog', category:'blog', group:'naver', name:'네이버 블로그', status:'ok',
+      links:[{label:'블로그 홈', url:'https://blog.naver.com'},{label:'글쓰기', url:'https://blog.naver.com/GoBlogWrite.naver'}],
+      todos:[], note:'AI로 초안 작성 후 이미지 포함해서 수동 업로드.',
+      prompt:'', workTopic:'', workBody:''
+    },
+    {
+      id:'veluna', category:'veluna', name:'벨루나몰 (velunamall.com)', status:'ok',
+      links:[{label:'사이트', url:'https://velunamall.com'},{label:'GitHub', url:'https://github.com/rorhkdcns/veluna-auto-post'}],
+      todos:[], note:'Sheets → 상품선택 → 이미지 리호스팅 → Gemini 생성 → Blogger 발행 자동화 완료.',
+      adminUrl:'', adminId:'', adminPw:'', adminEmbedOpen:false, showPw:false
+    },
+    {
+      id:'naverad', category:'other', name:'네이버 광고 (온라인 쇼핑몰 SA)', status:'warn',
+      links:[{label:'네이버 광고관리시스템', url:'https://searchad.naver.com/'}],
+      todos:[ {text:'키워드 진단 스크립트 실행 상태 점검 (삭제후보/입찰인상/유지/검토필요 태깅)', done:false} ],
+      note:'SA API 자격 확보됨. 실행 여부 불확실 - 재확인 필요.'
+    },
+    {
+      id:'inventory', category:'other', name:'재고관리 시스템 (헤어다이 창고)', status:'ok',
+      links:[{label:'앱', url:'https://rorhkdcns.github.io/inventory-system'},{label:'GitHub', url:'https://github.com/rorhkdcns/inventory-system'}],
+      todos:[], note:'Supabase 마이그레이션 완료, 멀티기기 실시간 동기화 확인됨.'
+    },
+  ]
+};
+
+let data = load();
+let imageCache = {};
+
+// ---------- one-time data migrations (run once per synced dataset, tracked via data.migrations) ----------
+if(!data.migrations) data.migrations = {};
+
+function migrateQuicklinksToAccounts(){
+  if(data.migrations.quicklinksMoved) return false;
+  const catMap = {
+    'GitHub':'개발/API', 'Vercel':'개발/API', 'Supabase':'개발/API', 'Search Console':'개발/API',
+    '네이버 광고관리시스템':'광고'
+  };
+  const skip = ['네이버 블로그 글쓰기']; // 이미 네이버블로그 프로젝트 카드 안 링크와 중복이라 제외
+  let changed = false;
+  (data.quicklinks||[]).forEach(l=>{
+    if(skip.includes(l.label)) return;
+    const exists = data.accounts.some(a=>a.url===l.url);
+    if(!exists){
+      const cat = catMap[l.label] || '기타';
+      if(!data.accountCategories.includes(cat)) data.accountCategories.push(cat);
+      data.accounts.push({
+        id:'acc'+Date.now()+Math.random().toString(36).slice(2,6),
+        name:l.label, url:l.url, username:'', pw:'', category:cat, note:'', showPw:false
+      });
+      changed = true;
+    }
+  });
+  data.quicklinks = [];
+  data.migrations.quicklinksMoved = true;
+  return true;
+}
+
+function seedFreeKeywordTools(){
+  if(data.migrations.keywordToolsSeeded) return false;
+  const cat = '키워드리서치';
+  if(!data.accountCategories.includes(cat)) data.accountCategories.push(cat);
+  const tools = [
+    {name:'네이버 데이터랩', url:'https://datalab.naver.com', note:'검색어 트렌드 · 완전 무료 · 가입 불필요'},
+    {name:'네이버 검색광고 키워드도구', url:'https://searchad.naver.com', note:'무료 가입 후 키워드 검색량 조회'},
+    {name:'키워드마스터', url:'https://whereispost.com/keyword', note:'네이버 검색량+블로그 경쟁도 · 완전 무료 · 로그인 불필요'},
+  ];
+  let changed = false;
+  tools.forEach(t=>{
+    if(!data.accounts.some(a=>a.url===t.url)){
+      data.accounts.push({
+        id:'acc'+Date.now()+Math.random().toString(36).slice(2,6),
+        name:t.name, url:t.url, username:'', pw:'', category:cat, note:t.note, showPw:false
+      });
+      changed = true;
+    }
+  });
+  data.migrations.keywordToolsSeeded = true;
+  return true;
+}
+
+let attachments = {}; // { ventureId: [{id, dataUrl, name}] } in-memory only
+let refImages = {}; // { ventureId: [{dataUrl, name}] } 글 생성시 AI에게 보여줄 참고 이미지 (in-memory)
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY_V4);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(!parsed.activeVenture) parsed.activeVenture = {};
+      if(!parsed.settings) parsed.settings = {geminiApiKey:'', textModel:'gemini-2.5-flash', imageModel:'gemini-3.1-flash-image'};
+      if(parsed.settings.supabaseUrl===undefined) parsed.settings.supabaseUrl='';
+      if(parsed.settings.supabaseKey===undefined) parsed.settings.supabaseKey='';
+      if(parsed.settings.syncId===undefined) parsed.settings.syncId='';
+      if(parsed.lastModified===undefined) parsed.lastModified = 0;
+      if(!parsed.activeBlogGroup) parsed.activeBlogGroup = 'blogspot';
+      if(!parsed.imagePresets) parsed.imagePresets = [];
+      if(parsed.activeImagePresetId===undefined) parsed.activeImagePresetId = null;
+      if(!parsed.accounts) parsed.accounts = [];
+      if(!parsed.accountCategories) parsed.accountCategories = ['호스팅/도메인','개발/API','광고','금융','기타'];
+      if(parsed.priorities) parsed.priorities.forEach(p=>{
+        if(p.created===undefined) p.created = null;
+        if(p.due===undefined) p.due = null;
+      });
+      parsed.ventures.forEach(v=>{
+        if(v.adminUrl===undefined) v.adminUrl='';
+        if(v.adminId===undefined) v.adminId='';
+        if(v.adminPw===undefined) v.adminPw='';
+        if(v.adminEmbedOpen===undefined) v.adminEmbedOpen=false;
+        if(v.showPw===undefined) v.showPw=false;
+      });
+      return parsed;
+    }
+    // migrate from v3 if present (drops the old capture-tool-only state, keeps everything else)
+    const rawV3 = localStorage.getItem(STORAGE_KEY_V3);
+    if(rawV3){
+      const old = JSON.parse(rawV3);
+      delete old.captureRegions;
+      old.imagePresets = [];
+      old.activeImagePresetId = null;
+      old.accounts = [];
+      old.accountCategories = ['호스팅/도메인','개발/API','광고','금융','기타'];
+      if(old.priorities) old.priorities.forEach(p=>{
+        if(p.created===undefined) p.created = null;
+        if(p.due===undefined) p.due = null;
+      });
+      old.ventures.forEach(v=>{
+        v.adminUrl = v.adminUrl||''; v.adminId = v.adminId||''; v.adminPw = v.adminPw||'';
+        v.adminEmbedOpen = false; v.showPw = false;
+      });
+      if(old.activeCategory === 'capture') old.activeCategory = 'gillmong';
+      return old;
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(defaultData));
+}
+function save(){
+  data.lastModified = Date.now();
+  localStorage.setItem(STORAGE_KEY_V4, JSON.stringify(data));
+  scheduleSync();
+}
+
+// ---------- Supabase cross-device sync ----------
+// 동기화 원칙: API 키와 관리자 아이디/비밀번호는 절대 서버로 보내지 않고 이 기기에만 남긴다.
+let syncTimer = null;
+let syncBusy = false;
+
+function syncEnabled(){
+  const s = data.settings;
+  return !!(s.supabaseUrl && s.supabaseKey && s.syncId);
+}
+function setSyncStatus(text, color){
+  const el = document.getElementById('syncStatus');
+  if(!el) return;
+  el.textContent = text;
+  el.style.color = color || 'var(--text-faint)';
+}
+function buildSyncPayload(){
+  const clone = JSON.parse(JSON.stringify(data));
+  delete clone.settings; // 기기별 설정(API키 포함)은 동기화 제외
+  clone.ventures.forEach(v=>{ delete v.adminId; delete v.adminPw; delete v.showPw; });
+  if(clone.accounts) clone.accounts.forEach(a=>{ delete a.pw; delete a.showPw; });
+  return clone;
+}
+function applyRemotePayload(remote){
+  // 로컬에만 있는 민감정보(관리자 계정, 개별 계정 비밀번호)와 기기 설정은 보존하면서 나머지를 원격 데이터로 교체
+  const localSettings = data.settings;
+  const localAdmin = {};
+  data.ventures.forEach(v=>{ localAdmin[v.id] = {adminId:v.adminId||'', adminPw:v.adminPw||''}; });
+  const localAccountPw = {};
+  (data.accounts||[]).forEach(a=>{ localAccountPw[a.id] = a.pw||''; });
+  remote.settings = localSettings;
+  remote.ventures.forEach(v=>{
+    const a = localAdmin[v.id];
+    v.adminId = a ? a.adminId : '';
+    v.adminPw = a ? a.adminPw : '';
+    v.showPw = false;
+    if(v.adminEmbedOpen===undefined) v.adminEmbedOpen = false;
+  });
+  if(!remote.accounts) remote.accounts = [];
+  remote.accounts.forEach(a=>{ a.pw = localAccountPw[a.id] || ''; a.showPw = false; });
+  data = remote;
+  localStorage.setItem(STORAGE_KEY_V4, JSON.stringify(data));
+}
+function sbHeaders(){
+  return {
+    'apikey': data.settings.supabaseKey,
+    'Authorization': 'Bearer ' + data.settings.supabaseKey,
+    'Content-Type': 'application/json'
+  };
+}
+function sbEndpoint(){
+  return data.settings.supabaseUrl.replace(/\/+$/,'') + '/rest/v1/control_tower';
+}
+function scheduleSync(){
+  if(!syncEnabled()) return;
+  clearTimeout(syncTimer);
+  setSyncStatus('● 저장 대기...', 'var(--warn)');
+  syncTimer = setTimeout(pushSync, 1500);
+}
+async function pushSync(){
+  if(!syncEnabled() || syncBusy) return;
+  syncBusy = true;
+  setSyncStatus('● 동기화 중...', 'var(--warn)');
+  try{
+    const res = await fetch(sbEndpoint() + '?on_conflict=id', {
+      method:'POST',
+      headers:{...sbHeaders(), 'Prefer':'resolution=merge-duplicates'},
+      body: JSON.stringify([{ id: data.settings.syncId, payload: buildSyncPayload(), last_modified: data.lastModified }])
+    });
+    if(!res.ok){ throw new Error('업로드 실패 (' + res.status + ')'); }
+    setSyncStatus('● 동기화됨', 'var(--ok)');
+  }catch(e){
+    setSyncStatus('● 동기화 실패 — ' + e.message, 'var(--issue)');
+  }
+  syncBusy = false;
+}
+async function pullSync(silent){
+  if(!syncEnabled() || syncBusy) return;
+  syncBusy = true;
+  if(!silent) setSyncStatus('● 불러오는 중...', 'var(--warn)');
+  try{
+    const res = await fetch(sbEndpoint() + '?id=eq.' + encodeURIComponent(data.settings.syncId) + '&select=payload,last_modified', {
+      headers: sbHeaders()
+    });
+    if(!res.ok) throw new Error('조회 실패 (' + res.status + ')');
+    const rows = await res.json();
+    if(rows.length && rows[0].last_modified > (data.lastModified||0)){
+      applyRemotePayload(rows[0].payload);
+      renderAll();
+      setSyncStatus('● 다른 기기의 변경사항을 불러왔습니다', 'var(--ok)');
+    } else {
+      setSyncStatus('● 동기화됨', 'var(--ok)');
+    }
+  }catch(e){
+    setSyncStatus('● 동기화 실패 — ' + e.message, 'var(--issue)');
+  }
+  syncBusy = false;
+}
+function makeSyncLink(){
+  const url = document.getElementById('settingsSbUrl').value.trim();
+  const key = document.getElementById('settingsSbKey').value.trim();
+  const sid = document.getElementById('settingsSyncId').value.trim();
+  const resultEl = document.getElementById('syncLinkResult');
+  if(!url || !key || !sid){
+    resultEl.innerHTML = `<div style="font-size:12.5px;color:var(--warn);">먼저 위 세 칸을 입력하고(저장 전이어도 됨) 다시 눌러주세요.</div>`;
+    return;
+  }
+  const payload = btoa(unescape(encodeURIComponent(JSON.stringify({u:url, k:key, s:sid}))));
+  const base = location.origin + location.pathname;
+  const link = base + '?sync=' + payload;
+  resultEl.innerHTML = `
+    <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">이 주소를 다른 기기(사무실 PC, 폰 등)에서 한 번 열거나 북마크해두면, 열자마자 자동으로 동기화 설정이 적용됩니다. <b>이 링크는 API 키가 포함돼 있으니 남에게 공유하지 마세요.</b></div>
+    <div style="display:flex; gap:6px;">
+      <input type="text" readonly value="${escAttr(link)}" style="font-size:11.5px;">
+      <button class="mini" onclick="navigator.clipboard.writeText('${link.replace(/'/g,"&#39;")}').then(()=>alert('링크가 복사되었습니다.'))">복사</button>
+    </div>
+  `;
+}
+
+function applySyncLinkFromUrl(){
+  const params = new URLSearchParams(location.search);
+  const raw = params.get('sync');
+  if(!raw) return false;
+  let applied = false;
+  try{
+    const decoded = JSON.parse(decodeURIComponent(escape(atob(raw))));
+    if(decoded.u && decoded.k && decoded.s){
+      data.settings.supabaseUrl = decoded.u;
+      data.settings.supabaseKey = decoded.k;
+      data.settings.syncId = decoded.s;
+      applied = true;
+      // 여기서는 저장/푸시하지 않음 — 원격 데이터를 먼저 받아온 뒤에 저장해야
+      // 이 기기의 텅 빈 초기 상태가 실수로 서버 데이터를 덮어쓰지 않는다.
+    }
+  }catch(e){ /* 잘못된 링크면 조용히 무시 */ }
+  history.replaceState({}, '', location.origin + location.pathname);
+  return applied;
+}
+
+async function testSyncConnection(){
+  const url = document.getElementById('settingsSbUrl').value.trim();
+  const key = document.getElementById('settingsSbKey').value.trim();
+  const sid = document.getElementById('settingsSyncId').value.trim();
+  const resultEl = document.getElementById('syncTestResult');
+  if(!url || !key || !sid){ resultEl.style.color='var(--warn)'; resultEl.textContent='△ 세 칸을 모두 입력하세요.'; return; }
+  resultEl.style.color='var(--text-dim)'; resultEl.textContent='테스트 중...';
+  try{
+    const res = await fetch(url.replace(/\/+$/,'') + '/rest/v1/control_tower?id=eq.' + encodeURIComponent(sid) + '&select=id', {
+      headers:{'apikey':key, 'Authorization':'Bearer '+key}
+    });
+    if(res.ok){ resultEl.style.color='var(--ok)'; resultEl.textContent='✔ 연결 성공! 저장을 누르면 동기화가 시작됩니다.'; }
+    else if(res.status===404){ resultEl.style.color='var(--issue)'; resultEl.textContent='✕ control_tower 테이블이 없습니다. 안내된 SQL을 먼저 실행하세요.'; }
+    else if(res.status===401){ resultEl.style.color='var(--issue)'; resultEl.textContent='✕ 키가 올바르지 않습니다 (anon public 키인지 확인).'; }
+    else { resultEl.style.color='var(--issue)'; resultEl.textContent='✕ 오류 ' + res.status + ' — 테이블/RLS 정책을 확인하세요.'; }
+  }catch(e){
+    resultEl.style.color='var(--issue)'; resultEl.textContent='✕ 연결 불가 — URL을 확인하세요.';
+  }
+}
+
+// ---------- clock ----------
+function tickClock(){
+  const now = new Date();
+  document.getElementById('clockTime').textContent =
+    now.toLocaleTimeString('ko-KR', {hour:'2-digit', minute:'2-digit', hour12:false});
+  document.getElementById('clockDate').textContent =
+    now.toLocaleDateString('ko-KR', {year:'numeric', month:'long', day:'numeric', weekday:'short'});
+}
+tickClock(); setInterval(tickClock, 1000*30);
+
+// ---------- quicklinks ----------
+function renderQuicklinks(){
+  const el = document.getElementById('quicklinks');
+  el.innerHTML = data.quicklinks.map(l =>
+    `<a class="qlink" href="${escAttr(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`
+  ).join('') + `<span class="qlink" style="cursor:pointer;border-style:dashed" onclick="addQuicklink()">+ 링크 추가</span>` +
+  `<span class="qlink settings-btn" style="cursor:pointer;" onclick="toggleSettings()">⚙ API 설정</span>`;
+}
+function addQuicklink(){
+  showFormModal('링크 추가', [
+    {key:'label', label:'링크 이름', placeholder:'예: Blogger'},
+    {key:'url', label:'URL'},
+  ], (r)=>{
+    if(!r.label.trim() || !r.url.trim()) return;
+    data.quicklinks.push({label:r.label.trim(), url:r.url.trim()});
+    save(); renderQuicklinks();
+  });
+}
+function toggleSettings(){
+  const el = document.getElementById('settingsPanel');
+  const showing = el.style.display === 'flex';
+  el.style.display = showing ? 'none' : 'flex';
+  if(!showing){
+    document.getElementById('settingsApiKey').value = data.settings.geminiApiKey || '';
+    document.getElementById('settingsTextModel').value = data.settings.textModel || 'gemini-2.5-flash';
+    document.getElementById('settingsImageModel').value = data.settings.imageModel || 'gemini-3.1-flash-image';
+    document.getElementById('settingsSbUrl').value = data.settings.supabaseUrl || '';
+    document.getElementById('settingsSbKey').value = data.settings.supabaseKey || '';
+    document.getElementById('settingsSyncId').value = data.settings.syncId || '';
+  }
+}
+function saveSettings(){
+  data.settings.geminiApiKey = document.getElementById('settingsApiKey').value.trim();
+  data.settings.textModel = document.getElementById('settingsTextModel').value.trim() || 'gemini-2.5-flash';
+  data.settings.imageModel = document.getElementById('settingsImageModel').value.trim() || 'gemini-3.1-flash-image';
+  data.settings.supabaseUrl = document.getElementById('settingsSbUrl').value.trim();
+  data.settings.supabaseKey = document.getElementById('settingsSbKey').value.trim();
+  data.settings.syncId = document.getElementById('settingsSyncId').value.trim();
+  save();
+  toggleSettings();
+  renderQuicklinks();
+  if(syncEnabled()) pullSync();
+}
+
+// ---------- data backup / restore ----------
+function exportData(){
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `control-tower-backup-${todayStr()}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(a.href);
+}
+function importData(fileList){
+  const f = fileList && fileList[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const imported = JSON.parse(reader.result);
+      if(!imported.ventures || !Array.isArray(imported.ventures)){
+        alert('올바른 백업 파일이 아닙니다.');
+        return;
+      }
+      if(!confirm('현재 데이터를 백업 파일 내용으로 완전히 교체합니다. 계속할까요?')) return;
+      data = imported;
+      save();
+      renderAll();
+      alert('데이터를 가져왔습니다.');
+    }catch(e){
+      alert('파일을 읽지 못했습니다: ' + e.message);
+    }
+  };
+  reader.readAsText(f);
+  document.getElementById('importFileInput').value = '';
+}
+
+async function testConnection(){
+  const resultEl = document.getElementById('testConnResult');
+  const btn = document.getElementById('testConnBtn');
+  const key = document.getElementById('settingsApiKey').value.trim() || data.settings.geminiApiKey;
+  btn.disabled = true;
+  resultEl.style.color = 'var(--text-dim)';
+  resultEl.textContent = '테스트 중...';
+  // 1단계: 구글 API 서버 자체에 연결 가능한지 (키 없이)
+  try{
+    await fetch('https://generativelanguage.googleapis.com/v1beta/models', {method:'GET'});
+  }catch(e){
+    resultEl.style.color = 'var(--issue)';
+    resultEl.textContent = '✕ 구글 API 서버 연결 자체가 차단됨 — 인터넷 연결, 백신/보안프로그램, 광고차단 확장프로그램을 확인하세요.';
+    btn.disabled = false;
+    return;
+  }
+  // 2단계: API 키 유효성
+  if(!key){
+    resultEl.style.color = 'var(--warn)';
+    resultEl.textContent = '△ 서버 연결은 정상. API 키를 입력하고 다시 테스트하세요.';
+    btn.disabled = false;
+    return;
+  }
+  try{
+    const model = (document.getElementById('settingsTextModel').value.trim()) || data.settings.textModel || 'gemini-2.5-flash';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({contents:[{role:'user', parts:[{text:'안녕이라고 한 단어로만 답해'}]}]})
+    });
+    const json = await res.json();
+    if(res.ok){
+      resultEl.style.color = 'var(--ok)';
+      resultEl.textContent = '✔ 연결 성공! 글 생성/추출 기능을 사용할 수 있습니다.';
+    } else {
+      resultEl.style.color = 'var(--issue)';
+      const msg = (json.error && json.error.message) || ('오류 ' + res.status);
+      if(res.status === 400 && /API key/i.test(msg)) resultEl.textContent = '✕ API 키가 올바르지 않습니다. 키를 다시 확인하세요.';
+      else if(res.status === 404) resultEl.textContent = `✕ 모델명(${model})을 찾을 수 없습니다. 텍스트 모델명을 확인하세요.`;
+      else if(res.status === 429) resultEl.textContent = '✕ 사용량 한도 초과. 잠시 후 다시 시도하거나 요금제를 확인하세요.';
+      else resultEl.textContent = '✕ ' + msg;
+    }
+  }catch(e){
+    resultEl.style.color = 'var(--issue)';
+    resultEl.textContent = '✕ 요청이 차단되었습니다: ' + e.message;
+  }
+  btn.disabled = false;
+}
+
+// ---------- priorities ----------
+function renderPriorities(){
+  const el = document.getElementById('priorityList');
+  if(data.priorities.length === 0){
+    el.innerHTML = `<div style="font-size:13px;color:var(--text-faint)">오늘 할 일이 없습니다.</div>`;
+    return;
+  }
+  const today = new Date(); today.setHours(0,0,0,0);
+  el.innerHTML = data.priorities.map((p,i) => {
+    let dueBadge = '';
+    if(p.due){
+      const dueDate = new Date(p.due + 'T00:00:00');
+      const diffDays = Math.round((dueDate - today) / 86400000);
+      if(!p.done){
+        if(diffDays < 0) dueBadge = `<span style="font-size:11.5px;color:#fff;background:var(--issue);padding:2px 7px;border-radius:3px;font-weight:600;">${-diffDays}일 지남</span>`;
+        else if(diffDays === 0) dueBadge = `<span style="font-size:11.5px;color:#fff;background:var(--warn);padding:2px 7px;border-radius:3px;font-weight:600;">오늘까지</span>`;
+        else if(diffDays <= 3) dueBadge = `<span style="font-size:11.5px;color:var(--warn);border:1px solid var(--warn);padding:1px 6px;border-radius:3px;font-weight:600;">D-${diffDays}</span>`;
+        else dueBadge = `<span style="font-size:11.5px;color:var(--text-faint);border:1px solid var(--border);padding:1px 6px;border-radius:3px;">D-${diffDays}</span>`;
+      }
+    }
+    const createdLabel = p.created ? `<span style="font-size:11px;color:var(--text-faint);font-family:var(--font-mono);">등록 ${p.created.slice(5).replace('-','/')}</span>` : '';
+    return `
+    <div class="pitem ${p.done?'done':''}">
+      <input type="checkbox" ${p.done?'checked':''} onchange="togglePriority(${i})">
+      <span>${esc(p.text)}</span>
+      ${dueBadge}
+      ${createdLabel}
+      <input type="date" value="${p.due||''}" onchange="setPriorityDue(${i}, this.value)" title="마감일 지정"
+        style="width:auto;padding:3px 6px;font-size:12px;background:#fff;border:1px solid var(--border);border-radius:3px;color:${p.due?'var(--text)':'var(--text-faint)'};">
+      <span class="del" onclick="delPriority(${i})">삭제</span>
+    </div>
+  `;}).join('');
+}
+function addPriority(){
+  const input = document.getElementById('priorityInput');
+  const text = input.value.trim();
+  if(!text) return;
+  data.priorities.push({text, done:false, created: todayStr(), due: null});
+  input.value='';
+  save(); renderPriorities();
+}
+function todayStr(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function setPriorityDue(i, val){
+  data.priorities[i].due = val || null;
+  save(); renderPriorities();
+}
+function togglePriority(i){ data.priorities[i].done = !data.priorities[i].done; save(); renderPriorities(); }
+function delPriority(i){ data.priorities.splice(i,1); save(); renderPriorities(); }
+
+// ---------- extract todos from conversation ----------
+let extractedTodos = [];
+function toggleExtractPanel(){
+  const el = document.getElementById('extractPanel');
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+async function extractTodos(){
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  const input = document.getElementById('extractInput').value.trim();
+  if(!input){ alert('대화 내용을 붙여넣으세요.'); return; }
+  const btn = document.getElementById('extractBtn');
+  btn.disabled = true; btn.textContent = '추출 중...';
+  const resultEl = document.getElementById('extractResult');
+  resultEl.innerHTML = '';
+  try{
+    const model = data.settings.textModel || 'gemini-2.5-flash';
+    const sysPrompt = '너는 대화 내용에서 사용자가 직접 수행해야 할 실행 항목(액션 아이템)만 추출하는 도구다. 규칙: 1) AI가 대신 해준 일이나 이미 완료된 일은 제외. 2) 사용자가 직접 해야 하는 미완료 작업만 추출 (예: 토큰 재발급, 설정 변경, 확인/점검, 결정, 업로드 등). 3) 각 항목은 한국어로 짧고 실행 가능한 한 문장으로. 4) 응답은 반드시 JSON 배열 형식만 출력: ["할 일 1", "할 일 2"]. 다른 텍스트, 마크다운, 백틱 없이 JSON 배열만. 5) 할 일이 없으면 빈 배열 [] 출력.';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        systemInstruction:{parts:[{text: sysPrompt}]},
+        contents:[{role:'user', parts:[{text: input}]}]
+      })
+    });
+    const json = await res.json();
+    if(!res.ok){ throw new Error((json.error && json.error.message) || ('요청 실패 (' + res.status + ')')); }
+    const respParts = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+    let text = respParts.map(p=>p.text||'').join('\n').trim();
+    text = text.replace(/```json|```/g,'').trim();
+    const arrMatch = text.match(/\[[\s\S]*\]/);
+    if(!arrMatch) throw new Error('추출 결과를 해석하지 못했습니다. 다시 시도해주세요.');
+    extractedTodos = JSON.parse(arrMatch[0]).filter(t=>typeof t==='string' && t.trim());
+    if(extractedTodos.length === 0){
+      resultEl.innerHTML = '<div style="font-size:13px;color:var(--text-faint);">이 대화에서는 할 일을 찾지 못했습니다.</div>';
+      return;
+    }
+    resultEl.innerHTML = `
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">추출된 할 일 — 추가할 항목만 체크하세요:</div>
+      ${extractedTodos.map((t,i)=>`
+        <div style="display:flex;align-items:center;gap:8px;font-size:13.5px;padding:3px 0;">
+          <input type="checkbox" id="ext-${i}" checked style="accent-color:var(--violet);width:15px;height:15px;">
+          <label for="ext-${i}" style="cursor:pointer;">${esc(t)}</label>
+        </div>`).join('')}
+      <button class="mini violet" style="margin-top:8px;" onclick="addExtractedTodos()">체크된 항목 우선순위에 추가</button>
+    `;
+  }catch(e){
+    resultEl.innerHTML = `<div style="font-size:13px;color:var(--issue);">추출 실패: ${esc(e.message)}</div>`;
+  } finally {
+    btn.disabled = false; btn.textContent = '할 일 추출';
+  }
+}
+function addExtractedTodos(){
+  let added = 0;
+  extractedTodos.forEach((t,i)=>{
+    const cb = document.getElementById('ext-'+i);
+    if(cb && cb.checked && !data.priorities.find(p=>p.text===t)){
+      data.priorities.push({text:t, done:false, created: todayStr(), due: null});
+      added++;
+    }
+  });
+  save(); renderPriorities();
+  document.getElementById('extractResult').innerHTML = `<div style="font-size:13px;color:var(--ok);">✔ ${added}개 항목이 우선순위에 추가되었습니다.</div>`;
+  document.getElementById('extractInput').value = '';
+  extractedTodos = [];
+}
+
+// ---------- tabs / nav ----------
+const statusOrder = ['ok','warn','issue'];
+const statusLabel = {ok:'정상 가동', warn:'확인 필요', issue:'이슈 발생'};
+const statusColorVar = {ok:'var(--ok)', warn:'var(--warn)', issue:'var(--issue)'};
+
+function venturesInCategory(catId){ return data.ventures.filter(v => v.category === catId); }
+function venturesInGroup(groupId){ return data.ventures.filter(v => v.category==='blog' && v.group===groupId); }
+
+function renderTabbar(){
+  const el = document.getElementById('tabbar');
+  el.innerHTML = CATEGORIES.map(c => {
+    const items = venturesInCategory(c.id);
+    let dotColor = '#3a4266';
+    if(items.length){
+      if(items.some(v=>v.status==='issue')) dotColor = 'var(--issue)';
+      else if(items.some(v=>v.status==='warn')) dotColor = 'var(--warn)';
+      else dotColor = 'var(--ok)';
+    }
+    return `<div class="tab ${data.activeCategory===c.id?'active':''}" onclick="selectCategory('${c.id}')">
+      <span class="dot" style="background:${dotColor}"></span>${esc(c.label)}
+    </div>`;
+  }).join('') + `<div class="tab tool-tab ${data.activeCategory==='imagegen'?'active':''}" onclick="selectCategory('imagegen')">🎨 이미지 생성</div>`
+  + `<div class="tab tool-tab ${data.activeCategory==='accounts'?'active':''}" onclick="selectCategory('accounts')">🔐 계정</div>`
+  + (data.activeCategory==='imagegen'||data.activeCategory==='accounts' ? '' : `<div class="tab-add" onclick="addVenture(data.activeCategory, data.activeCategory==='blog'?data.activeBlogGroup:undefined)">+ 새 프로젝트</div>`);
+}
+
+function selectCategory(catId){
+  data.activeCategory = catId;
+  if(catId === 'imagegen' || catId === 'accounts'){
+    // tool tab - no venture bookkeeping
+  } else if(catId === 'blog'){
+    if(!data.activeBlogGroup) data.activeBlogGroup = 'blogspot';
+    ensureActiveVentureForBlogGroup();
+  } else {
+    const items = venturesInCategory(catId);
+    if(items.length && !items.find(v=>v.id===data.activeVenture[catId])){
+      data.activeVenture[catId] = items[0].id;
+    }
+  }
+  save(); renderAll();
+}
+function ensureActiveVentureForBlogGroup(){
+  const items = venturesInGroup(data.activeBlogGroup);
+  if(items.length && !items.find(v=>v.id===data.activeVenture['blog'])){
+    data.activeVenture['blog'] = items[0].id;
+  }
+}
+function selectBlogGroup(groupId){
+  data.activeBlogGroup = groupId;
+  ensureActiveVentureForBlogGroup();
+  save(); renderAll();
+}
+function selectVenture(id){
+  const key = data.activeCategory;
+  data.activeVenture[key] = id;
+  save(); renderContentArea();
+}
+
+function renderSecondaryNav(){
+  const el = document.getElementById('subtabbar');
+  if(data.activeCategory === 'imagegen' || data.activeCategory === 'accounts'){
+    el.innerHTML=''; el.style.display='none'; return;
+  }
+  if(data.activeCategory === 'blog'){
+    el.style.display='flex'; el.style.flexDirection='column'; el.style.gap='10px';
+    const groupPills = BLOG_GROUPS.map(g=>{
+      const items = venturesInGroup(g.id);
+      let dotColor = '#3a4266';
+      if(items.length){
+        if(items.some(v=>v.status==='issue')) dotColor='var(--issue)';
+        else if(items.some(v=>v.status==='warn')) dotColor='var(--warn)';
+        else dotColor='var(--ok)';
+      }
+      return `<div class="subtab group-pill ${data.activeBlogGroup===g.id?'active':''}" onclick="selectBlogGroup('${g.id}')">
+        <span class="led-mini" style="background:${dotColor}"></span>${esc(g.label)}
+      </div>`;
+    }).join('');
+    const siteItems = venturesInGroup(data.activeBlogGroup);
+    let sitesHtml;
+    if(siteItems.length){
+      const activeId = data.activeVenture['blog'];
+      sitesHtml = `<div style="display:flex;flex-wrap:wrap;gap:8px;padding-left:2px;">` +
+        siteItems.map(v=>`<div class="subtab ${v.id===activeId?'active':''}" draggable="true"
+          ondragstart="subtabDragStart(event,'${v.id}')" ondragover="subtabDragOver(event)" ondragleave="subtabDragLeave(event)" ondrop="subtabDrop(event,'${v.id}')" ondragend="subtabDragEnd(event)"
+          onclick="selectVenture('${v.id}')">
+          <span class="led-mini" style="background:${statusColorVar[v.status]}"></span>${esc(v.name)}
+        </div>`).join('') +
+        `<div class="subtab-add" onclick="addVenture('blog','${data.activeBlogGroup}')">+ 추가</div></div>`;
+    } else {
+      const label = BLOG_GROUPS.find(g=>g.id===data.activeBlogGroup).label;
+      sitesHtml = `<div style="padding-left:2px;"><div class="subtab-add" onclick="addVenture('blog','${data.activeBlogGroup}')">+ ${esc(label)}에 추가</div></div>`;
+    }
+    el.innerHTML = `<div style="display:flex;flex-wrap:wrap;gap:8px;">${groupPills}</div>` + sitesHtml;
+  } else {
+    const items = venturesInCategory(data.activeCategory);
+    if(items.length <= 1){ el.innerHTML=''; el.style.display='none'; return; }
+    el.style.display='flex'; el.style.flexDirection='row'; el.style.flexWrap='wrap'; el.style.gap='8px';
+    const activeId = data.activeVenture[data.activeCategory];
+    el.innerHTML = items.map(v => `<div class="subtab ${v.id===activeId?'active':''}" draggable="true"
+        ondragstart="subtabDragStart(event,'${v.id}')" ondragover="subtabDragOver(event)" ondragleave="subtabDragLeave(event)" ondrop="subtabDrop(event,'${v.id}')" ondragend="subtabDragEnd(event)"
+        onclick="selectVenture('${v.id}')">
+        <span class="led-mini" style="background:${statusColorVar[v.status]}"></span>${esc(v.name)}
+      </div>`).join('') + `<div class="subtab-add" onclick="addVenture('${data.activeCategory}')">+ 추가</div>`;
+  }
+}
+
+// ---------- drag-to-reorder sub-menu buttons ----------
+let dragVentureId = null;
+function subtabDragStart(e, id){
+  dragVentureId = id;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', id);
+  e.target.style.opacity = '0.4';
+}
+function subtabDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.style.borderColor = 'var(--violet)';
+}
+function subtabDragLeave(e){
+  e.currentTarget.style.borderColor = '';
+}
+function subtabDrop(e, targetId){
+  e.preventDefault();
+  e.currentTarget.style.borderColor = '';
+  if(!dragVentureId || dragVentureId===targetId){ dragVentureId=null; return; }
+  const fromIdx = data.ventures.findIndex(v=>v.id===dragVentureId);
+  if(fromIdx<0){ dragVentureId=null; return; }
+  const [moved] = data.ventures.splice(fromIdx,1);
+  const toIdx = data.ventures.findIndex(v=>v.id===targetId);
+  data.ventures.splice(toIdx<0?data.ventures.length:toIdx, 0, moved);
+  dragVentureId = null;
+  save(); renderSecondaryNav();
+}
+function subtabDragEnd(e){
+  e.target.style.opacity = '';
+  dragVentureId = null;
+}
+
+// ---------- drag-to-reorder account category chips ----------
+let dragCatName = null;
+function catDragStart(e, name){
+  dragCatName = name;
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', name);
+  e.currentTarget.style.opacity = '0.4';
+}
+function catDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.style.borderColor = 'var(--violet)';
+}
+function catDragLeave(e){
+  e.currentTarget.style.borderColor = '';
+}
+function catDrop(e, targetName){
+  e.preventDefault();
+  e.currentTarget.style.borderColor = '';
+  if(!dragCatName || dragCatName===targetName){ dragCatName=null; return; }
+  const fromIdx = data.accountCategories.indexOf(dragCatName);
+  if(fromIdx<0){ dragCatName=null; return; }
+  data.accountCategories.splice(fromIdx,1);
+  const toIdx = data.accountCategories.indexOf(targetName);
+  data.accountCategories.splice(toIdx<0?data.accountCategories.length:toIdx, 0, dragCatName);
+  dragCatName = null;
+  save(); renderAccountsContent();
+}
+function catDragEnd(e){
+  e.currentTarget.style.opacity = '';
+  dragCatName = null;
+}
+
+function renderContentArea(){
+  const el = document.getElementById('contentArea');
+  if(data.activeCategory === 'imagegen'){ renderImageGenContent(); return; }
+  if(data.activeCategory === 'accounts'){ renderAccountsContent(); return; }
+  let items, emptyLabel, addCategory, addGroup, storeKey;
+  if(data.activeCategory === 'blog'){
+    items = venturesInGroup(data.activeBlogGroup);
+    emptyLabel = BLOG_GROUPS.find(g=>g.id===data.activeBlogGroup).label;
+    addCategory = 'blog'; addGroup = data.activeBlogGroup; storeKey = 'blog';
+  } else {
+    items = venturesInCategory(data.activeCategory);
+    emptyLabel = CATEGORIES.find(c=>c.id===data.activeCategory).label;
+    addCategory = data.activeCategory; storeKey = data.activeCategory;
+  }
+  const kwWidgetHtml = data.activeCategory === 'blog' ? renderKeywordWidgetCard() : '';
+  if(items.length === 0){
+    el.innerHTML = kwWidgetHtml + `<div class="empty-cat">${esc(emptyLabel)}에 등록된 프로젝트가 없습니다.<br>
+      <button class="mini" onclick="addVenture('${addCategory}'${addGroup?`,'${addGroup}'`:''})">+ ${esc(emptyLabel)} 프로젝트 추가</button></div>`;
+    return;
+  }
+  let activeId = data.activeVenture[storeKey];
+  if(!items.find(v=>v.id===activeId)){ activeId = items[0].id; data.activeVenture[storeKey]=activeId; }
+  const v = items.find(x=>x.id===activeId);
+  const vi = data.ventures.indexOf(v);
+  const isNaver = v.category==='blog' && v.group==='naver';
+
+  el.innerHTML = kwWidgetHtml + `
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">
+            <div class="led ${v.status}" onclick="cycleStatus(${vi})" title="클릭해서 상태 변경"></div>
+            <h3>${esc(v.name)}</h3>
+          </div>
+          <div class="status-label">${statusLabel[v.status]}</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <div class="card-remove" style="color:var(--text-dim);" onclick="renameVenture(${vi})">✎ 이름 수정</div>
+          <div class="card-remove" onclick="removeVenture(${vi})">🗑 이 프로젝트 삭제</div>
+        </div>
+      </div>
+
+      <div class="card-links">
+        ${v.links.map((l,li) => `<a href="${escAttr(l.url)}" target="_blank" rel="noopener">${esc(l.label)}<span class="link-del" onclick="event.preventDefault();event.stopPropagation();delLink(${vi},${li})" title="링크 삭제"> ✕</span></a>`).join('')}
+        <span class="link-add" onclick="addLink(${vi})">+ 링크</span>
+      </div>
+
+      <div class="card-body">
+        <div>
+          <div class="section-label">TODO</div>
+          <div class="todo-list">
+            ${v.todos.map((t,ti) => `
+              <div class="todo-item ${t.done?'done':''}">
+                <input type="checkbox" ${t.done?'checked':''} onchange="toggleTodo(${vi},${ti})">
+                <span>${esc(t.text)}</span>
+                <span class="del" onclick="delTodo(${vi},${ti})">✕</span>
+              </div>
+            `).join('') || `<div style="font-size:12px;color:var(--text-faint)">할 일 없음</div>`}
+          </div>
+          <div class="mini-addrow" style="margin-top:8px;">
+            <input type="text" placeholder="할 일 추가" id="todoInput">
+            <button class="mini" onclick="addTodo(${vi})">추가</button>
+          </div>
+        </div>
+        <div>
+          <div class="section-label">메모</div>
+          <textarea onblur="updateNote(${vi}, this.value)" placeholder="메모...">${esc(v.note||'')}</textarea>
+        </div>
+      </div>
+
+      ${renderAdminPanel(v, vi)}
+      ${isNaver ? renderAiPanel(v, vi) : ''}
+    </div>
+  `;
+  const inp = document.getElementById('todoInput');
+  if(inp) inp.addEventListener('keydown', e=>{ if(e.key==='Enter') addTodo(vi); });
+  if(isNaver){
+    const topicInp = document.getElementById('workTopic');
+    if(topicInp) topicInp.addEventListener('keydown', e=>{ if(e.key==='Enter') generateText(vi); });
+    const imgInp = document.getElementById('imgPrompt');
+    if(imgInp) imgInp.addEventListener('keydown', e=>{ if(e.key==='Enter') generateImage(vi); });
+    const titleInp = document.getElementById('workTitle');
+    if(titleInp) titleInp.addEventListener('keydown', e=>{ if(e.key==='Enter') generateTitle(vi); });
+    wireAttachDropzone(v.id);
+    const refDrop = document.getElementById('refDrop');
+    if(refDrop){
+      refDrop.ondragover = e=>{ e.preventDefault(); refDrop.classList.add('dragover'); };
+      refDrop.ondragleave = ()=>refDrop.classList.remove('dragover');
+      refDrop.ondrop = e=>{
+        e.preventDefault(); refDrop.classList.remove('dragover');
+        handleRefFiles(e.dataTransfer.files, v.id);
+      };
+    }
+  }
+}
+
+// ---------- 벨루나몰 블로그 키워드 추천 위젯 ----------
+// 매일 새벽 GitHub Actions가 naver-keyword-tool 레포에 올리는
+// data/blog-keywords-latest.json 을 그대로 읽어와서 보여준다.
+const KEYWORD_JSON_URL = 'https://raw.githubusercontent.com/rorhkdcns/naver-keyword-tool/main/data/blog-keywords-latest.json';
+
+function renderKeywordWidgetCard(){
+  return `
+    <div class="card" style="margin-bottom:4px;">
+      <div class="card-head">
+        <div class="card-title"><h3>📌 오늘의 추천 키워드</h3></div>
+        <button class="mini violet" id="kwRefreshBtn" onclick="loadBlogKeywords()">키워드 불러오기</button>
+      </div>
+      <div id="kwStatus" style="font-size:12.5px;color:var(--text-dim);"></div>
+      <div id="kwResults"></div>
+    </div>
+  `;
+}
+
+async function loadBlogKeywords(){
+  const statusEl = document.getElementById('kwStatus');
+  const resultsEl = document.getElementById('kwResults');
+  const btn = document.getElementById('kwRefreshBtn');
+  if(!statusEl || !resultsEl) return;
+  statusEl.textContent = '불러오는 중...';
+  resultsEl.innerHTML = '';
+  if(btn) btn.disabled = true;
+  try{
+    const res = await fetch(KEYWORD_JSON_URL + '?t=' + Date.now());
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const kwData = await res.json();
+    const updated = new Date(kwData.updatedAt).toLocaleString('ko-KR');
+    statusEl.textContent = `업데이트: ${updated} · 전체 ${kwData.total}개 · 추천 ${kwData.recommended}개`;
+    const recommended = (kwData.keywords || []).filter(k => k.diagnoseTag === '포스팅추천');
+    if(!recommended.length){
+      resultsEl.innerHTML = '<div style="font-size:13px;color:var(--text-faint);">오늘 추천 등급 키워드가 없습니다.</div>';
+      return;
+    }
+    resultsEl.innerHTML = `
+      <div class="account-table-wrap" style="margin-top:8px;">
+        <table class="account-table">
+          <thead><tr><th>키워드</th><th>검색량</th><th>경쟁도</th><th>점수</th><th></th></tr></thead>
+          <tbody>
+            ${recommended.map(k => `
+              <tr>
+                <td class="acc-name" style="cursor:pointer;" onclick="copyKeyword('${esc(k.keyword).replace(/'/g,"&#39;")}')" title="클릭하면 복사됨">${esc(k.keyword)}</td>
+                <td>${Number(k.total).toLocaleString()}</td>
+                <td>${esc(k.compIdx)}</td>
+                <td style="color:var(--accent-strong);font-weight:700;">${esc(String(k.score))}</td>
+                <td><button class="mini violet" style="font-size:12px;padding:5px 10px;" onclick="useKeywordForPost('${esc(k.keyword).replace(/'/g,"&#39;")}')">✍ 이 키워드로 글쓰기</button></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+      </div>
+    `;
+  }catch(e){
+    statusEl.textContent = '';
+    resultsEl.innerHTML = `<div style="font-size:13px;color:var(--issue);">불러오기 실패: ${esc(e.message)}</div>`;
+  } finally {
+    if(btn) btn.disabled = false;
+  }
+}
+function copyKeyword(text){
+  navigator.clipboard.writeText(text)
+    .then(()=>alert('키워드가 복사되었습니다: ' + text))
+    .catch(()=>alert('복사에 실패했습니다.'));
+}
+
+// 키워드 표에서 "이 키워드로 글쓰기" 클릭 시:
+// 네이버블로그 그룹/프로젝트로 전환 → 주제칸에 키워드 채우기 → 자동으로 글 생성 실행
+function useKeywordForPost(keyword){
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  data.activeCategory = 'blog';
+  data.activeBlogGroup = 'naver';
+  ensureActiveVentureForBlogGroup();
+  const ventureId = data.activeVenture['blog'];
+  const vi = data.ventures.findIndex(v => v.id === ventureId && v.category==='blog' && v.group==='naver');
+  if(vi < 0){ alert('네이버 블로그 프로젝트를 먼저 만들어주세요.'); return; }
+  data.ventures[vi].workTopic = keyword;
+  save();
+  renderAll();
+  setTimeout(()=>{
+    const topicInp = document.getElementById('workTopic');
+    if(topicInp) topicInp.value = keyword;
+    generateText(vi);
+  }, 60);
+}
+
+// ---------- admin login panel ----------
+function renderAdminPanel(v, vi){
+  if(!v.adminUrl){
+    return `
+      <div class="admin-panel">
+        <div class="section-label">관리자 로그인</div>
+        <button class="mini" onclick="editAdminInfo(${vi})">+ 관리자 로그인 정보 추가</button>
+      </div>`;
+  }
+  const pwType = v.showPw ? 'text' : 'password';
+  return `
+    <div class="admin-panel">
+      <div class="section-label">관리자 로그인
+        <span class="edit-link" onclick="editAdminInfo(${vi})">정보 수정</span>
+      </div>
+      <div class="card-links">
+        <a href="${escAttr(v.adminUrl)}" target="_blank" rel="noopener">관리자 페이지 열기 ↗</a>
+        <span class="link-add" onclick="toggleAdminEmbed(${vi})">${v.adminEmbedOpen ? '임베드 닫기' : '이 안에서 보기 (임베드 시도)'}</span>
+      </div>
+      <div class="mini-addrow" style="max-width:440px;">
+        <input type="text" readonly value="${escAttr(v.adminId||'(아이디 미입력)')}">
+        <button class="mini" onclick="copyAdminField(${vi},'id')">아이디 복사</button>
+      </div>
+      <div class="mini-addrow" style="max-width:440px;">
+        <input type="${pwType}" readonly value="${escAttr(v.adminPw||'')}" placeholder="(비밀번호 미입력)">
+        <button class="mini" onclick="togglePwVisible(${vi})">${v.showPw?'숨기기':'표시'}</button>
+        <button class="mini" onclick="copyAdminField(${vi},'pw')">비밀번호 복사</button>
+      </div>
+      ${v.adminEmbedOpen ? `
+        <iframe src="${escAttr(v.adminUrl)}" style="width:100%;height:520px;border:1px solid var(--border-soft);border-radius:8px;background:#fff;"></iframe>
+        <div style="font-size:11px;color:var(--text-faint);">화면이 비어있거나 로그인이 풀려 보이면 해당 사이트가 임베드를 차단한 것입니다 — "관리자 페이지 열기"로 새 탭에서 이용하세요.</div>
+      ` : ''}
+    </div>`;
+}
+function editAdminInfo(vi){
+  const v = data.ventures[vi];
+  showFormModal('관리자 로그인 정보', [
+    {key:'url', label:'관리자 페이지 URL', value:v.adminUrl||''},
+    {key:'id', label:'아이디', value:v.adminId||''},
+    {key:'pw', label:'비밀번호 (이 기기에만 저장)', type:'password', value:v.adminPw||''},
+  ], (r)=>{
+    v.adminUrl = r.url.trim(); v.adminId = r.id.trim(); v.adminPw = r.pw;
+    save(); renderContentArea();
+  });
+}
+function toggleAdminEmbed(vi){ data.ventures[vi].adminEmbedOpen = !data.ventures[vi].adminEmbedOpen; save(); renderContentArea(); }
+function togglePwVisible(vi){ data.ventures[vi].showPw = !data.ventures[vi].showPw; save(); renderContentArea(); }
+function copyAdminField(vi, field){
+  const v = data.ventures[vi];
+  const text = field==='id' ? (v.adminId||'') : (v.adminPw||'');
+  if(!text){ alert('복사할 내용이 없습니다. 먼저 정보를 입력하세요.'); return; }
+  navigator.clipboard.writeText(text)
+    .then(()=>alert((field==='id'?'아이디':'비밀번호') + '가 복사되었습니다.'))
+    .catch(()=>alert('복사에 실패했습니다.'));
+}
+
+// ---------- AI writing panel (naver blog) ----------
+function renderAiPanel(v, vi){
+  const cachedImg = imageCache[v.id];
+  return `
+    <div class="ai-panel">
+      <div class="section-label ai">✦ AI 글쓰기 · Gemini + 나노바나나2</div>
+
+      <div>
+        <div class="section-label">프롬프트 지침 (직접 작성 · 저장됨)</div>
+        <textarea id="promptInput" style="min-height:90px;" placeholder="예: 너는 네이버 블로그 에디터야. 말투는 ~해요체, 2000자 내외, 소제목 3개 이상 등 원하는 지침을 자유롭게 입력" onblur="updatePrompt(${vi}, this.value)">${esc(v.prompt||'')}</textarea>
+      </div>
+
+      <div>
+        <div class="section-label">주제 / 키워드</div>
+        <div class="mini-addrow">
+          <input type="text" id="workTopic" placeholder="이번 글 주제나 키워드" value="${escAttr(v.workTopic||'')}">
+          <button class="mini violet" id="genTextBtn" onclick="generateText(${vi})">글 생성</button>
+        </div>
+        <div style="margin-top:8px;">
+          <input type="file" id="refFileInput" accept="image/*" multiple style="display:none;" onchange="handleRefFiles(this.files, '${v.id}')">
+          <div class="attach-drop" id="refDrop" onclick="document.getElementById('refFileInput').click()" style="padding:10px;">
+            🖼 참고 이미지 — 클릭·드래그·Ctrl+V 붙여넣기로 추가 (AI가 이미지를 보고 글을 씁니다 · 최대 5장)
+          </div>
+          ${(refImages[v.id]||[]).length ? `
+          <div class="attach-grid" style="margin-top:8px;">
+            ${(refImages[v.id]||[]).map((r,ri)=>`
+              <div class="attach-item" style="width:110px;">
+                <img src="${r.dataUrl}" style="height:70px;" title="${escAttr(r.name)}">
+                <div class="attach-actions">
+                  <button class="mini" onclick="removeRefImage('${v.id}',${ri})">✕ 제거</button>
+                </div>
+              </div>
+            `).join('')}
+          </div>` : ''}
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">제목</div>
+        <div class="mini-addrow">
+          <input type="text" id="workTitle" placeholder="제목 (직접 입력하거나 아래 버튼으로 생성)" value="${escAttr(v.workTitle||'')}" onblur="updateWorkTitle(${vi}, this.value)">
+          <button class="mini violet" id="genTitleBtn" onclick="generateTitle(${vi})">제목 생성</button>
+          <button class="mini" onclick="copyWorkTitle(${vi})">복사</button>
+        </div>
+        <div id="titleSuggestions" style="margin-top:8px;"></div>
+      </div>
+
+      <div>
+        <div class="section-label">생성된 글 (편집 가능)</div>
+        <textarea id="workBody" style="min-height:200px;" onblur="updateWorkBody(${vi}, this.value)" placeholder="생성 결과가 여기에 표시됩니다">${esc(v.workBody||'')}</textarea>
+        <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="mini" onclick="copyWorkBody(${vi})">본문 복사</button>
+          <button class="mini violet" id="genThumbBtn" onclick="generateThumbnail(${vi})">🖼 썸네일 자동 생성 (1000×1000)</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">이미지 생성 (나노바나나2)</div>
+        <div class="mini-addrow">
+          <input type="text" id="imgPrompt" placeholder="이미지 프롬프트 (비워두면 위 주제 사용)">
+          <button class="mini violet" id="genImgBtn" onclick="generateImage(${vi})">이미지 생성</button>
+        </div>
+        <label style="display:flex; align-items:center; gap:6px; margin-top:6px; font-size:12.5px; color:var(--text-dim); cursor:pointer;">
+          <input type="checkbox" id="imgUseRefs" style="accent-color:var(--violet); width:14px; height:14px;" ${(refImages[v.id]||[]).length?'':'disabled'}>
+          위 참고 이미지를 함께 사용 (올린 이미지 기반으로 생성/변형)
+        </label>
+        <div id="imgResult" style="margin-top:12px;">
+          ${cachedImg ? `<img src="${cachedImg}" style="max-width:420px;">
+            <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap;">
+              <button class="mini" onclick="addGeneratedToAttachments('${v.id}')">📎 첨부에 추가</button>
+              <a class="qlink" href="${cachedImg}" download="naver-blog-image.png">다운로드</a>
+            </div>` : ''}
+        </div>
+      </div>
+
+      <div>
+        <div class="section-label">첨부 이미지 (${(attachments[v.id]||[]).length}개 · 네이버 에디터에 복사→붙여넣기)</div>
+        <div class="attach-drop" id="attachDrop" onclick="document.getElementById('attachFileInput').click()">
+          클릭해서 이미지 선택 또는 여기로 드래그 (여러 장 가능)
+        </div>
+        <input type="file" id="attachFileInput" accept="image/*" multiple style="display:none;" onchange="handleAttachFiles(this.files, '${v.id}')">
+        <div class="attach-grid" style="margin-top:10px;">
+          ${(attachments[v.id]||[]).map((a,ai)=>`
+            <div class="attach-item">
+              <img src="${a.dataUrl}" title="${escAttr(a.name)}">
+              <div class="attach-actions">
+                <button class="mini" onclick="copyAttachment('${v.id}',${ai})">복사</button>
+                <button class="mini" onclick="downloadAttachment('${v.id}',${ai})">저장</button>
+                <button class="mini" onclick="removeAttachment('${v.id}',${ai})">✕</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        ${(attachments[v.id]||[]).length ? `<div style="margin-top:6px;font-size:11.5px;color:var(--text-faint);">"복사" 후 네이버 블로그 에디터에서 Ctrl+V 하면 바로 삽입됩니다. 새로고침하면 첨부 목록은 사라지니 글 작성 중에만 사용하세요.</div>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// ---------- standalone image generation studio ----------
+let genGallery = []; // [{dataUrl, prompt}] in-memory, this session only
+let studioRefImages = []; // [{dataUrl, name}] 편집/변형할 원본 이미지 (in-memory)
+
+function activePreset(){
+  return data.imagePresets.find(p=>p.id===data.activeImagePresetId) || null;
+}
+
+function renderImageGenContent(){
+  const el = document.getElementById('contentArea');
+  const preset = activePreset();
+
+  const chips = data.imagePresets.map((p,i)=>`
+    <div class="preset-chip ${p.id===data.activeImagePresetId?'active':''}" onclick="selectImagePreset('${p.id}')">
+      <span class="num">${i+1}</span>${esc(p.name)}
+    </div>
+  `).join('');
+
+  const presetEditor = preset ? `
+    <div style="background:var(--violet-bg); border:1px solid var(--border); border-radius:4px; padding:14px;">
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px;">
+        <span class="section-label" style="margin:0;">지침 #${data.imagePresets.indexOf(preset)+1}</span>
+        <input type="text" value="${escAttr(preset.name)}" onblur="renamePreset('${preset.id}', this.value)"
+          style="width:220px; font-weight:700;" title="이름 수정 (수정 후 다른 곳 클릭)">
+        <span class="card-remove" onclick="deletePreset('${preset.id}')" style="margin-left:auto;">이 지침 삭제</span>
+      </div>
+      <textarea style="min-height:100px; background:#fff;" placeholder="이미지 스타일 지침 입력. 예: 파스텔톤 수채화 스타일, 배경은 미니멀하게, 텍스트 없이, 16:9 비율 느낌"
+        onblur="updatePresetPrompt('${preset.id}', this.value)">${esc(preset.prompt||'')}</textarea>
+      <div style="font-size:11.5px; color:var(--text-faint); margin-top:6px;">이 지침은 자동 저장되며, 아래에서 이미지를 만들 때 항상 함께 적용됩니다.</div>
+    </div>
+  ` : `
+    <div class="empty-cat" style="padding:24px;">
+      프롬프트 지침을 하나 만들어보세요. 지침은 번호가 붙는 매크로처럼 저장되고, 클릭 한 번으로 전환됩니다.<br>
+      <button class="mini violet" onclick="addPreset()">+ 첫 지침 만들기</button>
+    </div>`;
+
+  const galleryHtml = genGallery.length ? `
+    <div>
+      <div class="section-label">이번 세션에 생성된 이미지 (${genGallery.length}개 · 새로고침하면 사라지니 저장 필수)</div>
+      <div class="gen-gallery">
+        ${genGallery.map((g,gi)=>`
+          <div class="gitem">
+            <img src="${g.dataUrl}">
+            <div class="gprompt">${esc(g.prompt)}</div>
+            <div style="display:flex; gap:4px; flex-wrap:wrap;">
+              <button class="mini" style="flex:1;" onclick="downloadGenImage(${gi})">저장</button>
+              <button class="mini" style="flex:1;" onclick="copyGenImage(${gi})">복사</button>
+              <button class="mini" style="flex:1;" onclick="useGenAsRef(${gi})" title="이 결과를 원본으로 올려서 이어서 수정">↩ 재편집</button>
+              <button class="mini" onclick="removeGenImage(${gi})">✕</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>` : '';
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><h3>🎨 이미지 생성 스튜디오 · 나노바나나2</h3></div>
+      </div>
+
+      <div>
+        <div class="section-label">프롬프트 지침 매크로 (클릭해서 선택)</div>
+        <div class="preset-bar">
+          ${chips}
+          <div class="subtab-add" onclick="addPreset()">+ 새 지침</div>
+        </div>
+      </div>
+
+      ${presetEditor}
+
+      <div>
+        <div class="section-label">원본 이미지 (선택 · 올린 이미지를 바꾸거나 변형할 때)</div>
+        <input type="file" id="studioRefInput" accept="image/*" multiple style="display:none;" onchange="handleStudioRefFiles(this.files)">
+        <div class="attach-drop" id="studioDrop" onclick="document.getElementById('studioRefInput').click()">
+          🖼 클릭·드래그·Ctrl+V 붙여넣기로 이미지 추가 (최대 4장)<br>
+          <span style="font-size:11.5px;">예: 인물 사진 올리고 "이 사람을 한국인으로 바꿔줘" / 상품 사진 올리고 "배경을 흰색으로"</span>
+        </div>
+        ${studioRefImages.length ? `
+        <div class="attach-grid" style="margin-top:8px;">
+          ${studioRefImages.map((r,ri)=>`
+            <div class="attach-item" style="width:120px;">
+              <img src="${r.dataUrl}" style="height:80px;" title="${escAttr(r.name)}">
+              <div class="attach-actions">
+                <button class="mini" onclick="removeStudioRef(${ri})">✕ 제거</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>` : ''}
+      </div>
+
+      <div>
+        <div class="section-label">무엇을 그릴까요${studioRefImages.length ? ' / 어떻게 바꿀까요' : ''}</div>
+        <div class="mini-addrow">
+          <input type="text" id="genSubject" placeholder="${studioRefImages.length ? '변형 지시 입력 (예: 이 인물을 일본인 여성으로 바꿔줘, 나머지는 그대로)' : '이미지 내용 입력 (예: 아침 햇살이 드는 카페에서 커피 마시는 고양이)'}">
+          <button class="mini violet" id="genStudioBtn" onclick="generateStudioImage()">이미지 생성</button>
+        </div>
+        <div style="font-size:11.5px; color:var(--text-faint); margin-top:6px;">
+          ${preset ? `현재 적용 지침: <b>#${data.imagePresets.indexOf(preset)+1} ${esc(preset.name)}</b>` : '선택된 지침 없음 — 입력한 내용만으로 생성됩니다.'}
+          ${studioRefImages.length ? ` · 원본 이미지 ${studioRefImages.length}장 적용됨` : ''}
+        </div>
+      </div>
+
+      ${galleryHtml}
+    </div>
+  `;
+  const subjInp = document.getElementById('genSubject');
+  if(subjInp) subjInp.addEventListener('keydown', e=>{ if(e.key==='Enter') generateStudioImage(); });
+  wireStudioDropzone();
+}
+
+function wireStudioDropzone(){
+  const drop = document.getElementById('studioDrop');
+  if(!drop) return;
+  drop.ondragover = e=>{ e.preventDefault(); drop.classList.add('dragover'); };
+  drop.ondragleave = ()=>drop.classList.remove('dragover');
+  drop.ondrop = e=>{
+    e.preventDefault(); drop.classList.remove('dragover');
+    handleStudioRefFiles(e.dataTransfer.files);
+  };
+}
+
+function addPreset(){
+  const name = prompt('지침 이름 (예: 블로그 썸네일용, 상품사진 스타일)');
+  if(!name || !name.trim()) return;
+  const p = { id:'p'+Date.now(), name:name.trim(), prompt:'' };
+  data.imagePresets.push(p);
+  data.activeImagePresetId = p.id;
+  save(); renderImageGenContent();
+}
+function selectImagePreset(id){
+  data.activeImagePresetId = (data.activeImagePresetId===id) ? null : id;
+  save(); renderImageGenContent();
+}
+function renamePreset(id, val){
+  const p = data.imagePresets.find(x=>x.id===id);
+  if(!p) return;
+  const name = val.trim();
+  if(name) p.name = name;
+  save(); renderImageGenContent();
+}
+function updatePresetPrompt(id, val){
+  const p = data.imagePresets.find(x=>x.id===id);
+  if(!p) return;
+  p.prompt = val;
+  save();
+}
+function deletePreset(id){
+  const p = data.imagePresets.find(x=>x.id===id);
+  if(!p) return;
+  if(!confirm(`지침 "${p.name}"을(를) 삭제할까요?`)) return;
+  data.imagePresets = data.imagePresets.filter(x=>x.id!==id);
+  if(data.activeImagePresetId===id) data.activeImagePresetId = null;
+  save(); renderImageGenContent();
+}
+
+function handleStudioRefFiles(fileList){
+  const files = Array.from(fileList||[]).filter(f=>f.type.startsWith('image/'));
+  if(!files.length) return;
+  const room = 4 - studioRefImages.length;
+  if(room <= 0){ alert('원본 이미지는 최대 4장까지 올릴 수 있습니다.'); return; }
+  let remaining = Math.min(files.length, room);
+  files.slice(0, room).forEach(f=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      studioRefImages.push({ dataUrl:reader.result, name:f.name });
+      remaining--;
+      if(remaining===0) renderImageGenContent();
+    };
+    reader.onerror = ()=>{ remaining--; if(remaining===0) renderImageGenContent(); };
+    reader.readAsDataURL(f);
+  });
+}
+function removeStudioRef(ri){ studioRefImages.splice(ri,1); renderImageGenContent(); }
+function useGenAsRef(gi){
+  const g = genGallery[gi]; if(!g) return;
+  if(studioRefImages.length >= 4){ alert('원본 이미지는 최대 4장까지입니다. 기존 것을 제거 후 다시 시도하세요.'); return; }
+  studioRefImages.push({ dataUrl:g.dataUrl, name:'생성 결과' });
+  renderImageGenContent();
+}
+
+async function generateStudioImage(){
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  const subjInp = document.getElementById('genSubject');
+  const subject = subjInp.value.trim();
+  const preset = activePreset();
+  if(!subject && !(preset && preset.prompt.trim()) && !studioRefImages.length){ alert('이미지 내용을 입력하거나, 지침을 선택하거나, 원본 이미지를 올리세요.'); return; }
+  let fullPrompt = '';
+  if(preset && preset.prompt.trim()) fullPrompt += preset.prompt.trim();
+  if(subject) fullPrompt += (fullPrompt ? '\n\n' : '') + subject;
+  if(!fullPrompt && studioRefImages.length) fullPrompt = '이 이미지를 더 보기 좋게 개선해줘.';
+  const btn = document.getElementById('genStudioBtn');
+  btn.disabled = true; btn.textContent = '생성 중...';
+  try{
+    const model = data.settings.imageModel || 'gemini-3.1-flash-image';
+    const parts = [{text: fullPrompt}];
+    studioRefImages.forEach(r=>{
+      const match = r.dataUrl.match(/^data:(image\/[\w.+-]+);base64,(.+)$/s);
+      if(match){ parts.push({ inline_data:{ mime_type: match[1], data: match[2] } }); }
+    });
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        contents:[{role:'user', parts}],
+        generationConfig:{ responseModalities:['IMAGE','TEXT'] }
+      })
+    });
+    const json = await res.json();
+    if(!res.ok){ throw new Error((json.error && json.error.message) || ('요청 실패 (' + res.status + ')')); }
+    const respParts = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+    const imgPart = respParts.find(p=>p.inlineData);
+    if(!imgPart){
+      const refusalText = respParts.map(p=>p.text||'').join(' ').trim();
+      throw new Error(refusalText ? ('이미지 대신 다음 응답이 왔습니다: ' + refusalText.slice(0,200)) : '이미지가 반환되지 않았습니다. 내용을 조금 더 구체적으로 적어보세요.');
+    }
+    genGallery.unshift({ dataUrl:`data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`, prompt: subject || preset.name });
+    renderImageGenContent();
+  }catch(e){
+    alert('이미지 생성 실패: ' + e.message);
+  } finally {
+    const b = document.getElementById('genStudioBtn');
+    if(b){ b.disabled=false; b.textContent='이미지 생성'; }
+  }
+}
+function downloadGenImage(gi){
+  const g = genGallery[gi]; if(!g) return;
+  const a = document.createElement('a');
+  a.href = g.dataUrl; a.download = `image-${Date.now()}.png`;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+async function copyGenImage(gi){
+  const g = genGallery[gi]; if(!g) return;
+  if(!navigator.clipboard || !window.ClipboardItem){ alert('이 브라우저는 이미지 복사를 지원하지 않습니다. 저장을 이용하세요.'); return; }
+  try{
+    const blob = await (await fetch(g.dataUrl)).blob();
+    let pngBlob = blob;
+    if(blob.type !== 'image/png'){
+      pngBlob = await new Promise((resolve,reject)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          const c = document.createElement('canvas');
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext('2d').drawImage(img,0,0);
+          c.toBlob(b=>b?resolve(b):reject(new Error('변환 실패')), 'image/png');
+        };
+        img.onerror = reject;
+        img.src = g.dataUrl;
+      });
+    }
+    await navigator.clipboard.write([new ClipboardItem({'image/png': pngBlob})]);
+    alert('이미지가 복사되었습니다.');
+  }catch(e){ alert('복사 실패: ' + e.message); }
+}
+function removeGenImage(gi){ genGallery.splice(gi,1); renderImageGenContent(); }
+
+function updatePrompt(vi, val){ data.ventures[vi].prompt = val; save(); }
+
+// ---------- accounts vault ----------
+let activeAccountFilter = 'all';
+const DEFAULT_ACCOUNT_CATEGORIES = ['호스팅/도메인','개발/API','광고','금융','기타'];
+
+function renderAccountsContent(){
+  const el = document.getElementById('contentArea');
+  if(!data.accountCategories) data.accountCategories = ['호스팅/도메인','개발/API','광고','금융','기타'];
+  // 계정에 쓰였는데 관리 목록에 없는 분류는 자동으로 편입 (기존 데이터 보존)
+  data.accounts.forEach(a=>{ if(a.category && !data.accountCategories.includes(a.category)) data.accountCategories.push(a.category); });
+
+  const filtered = activeAccountFilter==='all' ? data.accounts : data.accounts.filter(a=>a.category===activeAccountFilter);
+
+  const filterChips = `
+    <div class="account-filter-bar">
+      <div class="preset-chip ${activeAccountFilter==='all'?'active':''}" onclick="setAccountFilter('all')">전체 (${data.accounts.length})</div>
+      ${data.accountCategories.map(c=>{
+        const count = data.accounts.filter(a=>a.category===c).length;
+        return `<div class="preset-chip cat-manage ${activeAccountFilter===c?'active':''}" draggable="true"
+          ondragstart="catDragStart(event,'${escAttr(c)}')" ondragover="catDragOver(event)" ondragleave="catDragLeave(event)" ondrop="catDrop(event,'${escAttr(c)}')" ondragend="catDragEnd(event)">
+          <span onclick="setAccountFilter('${escAttr(c)}')">${esc(c)} (${count})</span>
+          <span class="cat-edit" onclick="event.stopPropagation();renameCategory('${escAttr(c)}')" title="이름 수정">✎</span>
+          <span class="cat-del" onclick="event.stopPropagation();deleteCategory('${escAttr(c)}')" title="분류 삭제">✕</span>
+        </div>`;
+      }).join('')}
+      <div class="subtab-add" onclick="addCategory()">+ 분류 추가</div>
+    </div>`;
+
+  const bodyRows = filtered.length ? filtered.map(a=>`
+    <tr>
+      <td>
+        <div class="acc-name">${esc(a.name)}</div>
+        ${a.category ? `<span class="acc-cat" onclick="setAccountFilter('${escAttr(a.category)}')" title="이 분류로 필터링">${esc(a.category)}</span>` : ''}
+      </td>
+      <td>${a.url ? `<a href="${escAttr(a.url)}" target="_blank" rel="noopener" class="acc-url-link">열기 ↗</a>` : `<span class="acc-empty">—</span>`}</td>
+      <td>
+        <div class="acc-cell-copy">
+          <span class="acc-mono">${a.username ? esc(a.username) : '<span class="acc-empty">—</span>'}</span>
+          ${a.username ? `<button class="mini acc-copy-btn" onclick="copyAccountField('${a.id}','username')">복사</button>` : ''}
+        </div>
+      </td>
+      <td>
+        <div class="acc-cell-copy">
+          <span class="acc-mono">${a.pw ? (a.showPw ? esc(a.pw) : '••••••••') : '<span class="acc-empty">—</span>'}</span>
+          ${a.pw ? `
+            <button class="mini acc-copy-btn" onclick="toggleAccountPw('${a.id}')">${a.showPw?'숨김':'표시'}</button>
+            <button class="mini acc-copy-btn" onclick="copyAccountField('${a.id}','pw')">복사</button>
+          ` : ''}
+        </div>
+      </td>
+      <td class="acc-note-cell">${a.note ? esc(a.note) : ''}</td>
+      <td>
+        <div style="display:flex; gap:4px; justify-content:flex-end;">
+          <span class="link-add" onclick="editAccount('${a.id}')">수정</span>
+          <span class="card-remove" onclick="deleteAccount('${a.id}')">삭제</span>
+        </div>
+      </td>
+    </tr>
+  `).join('') : `<tr><td colspan="6"><div class="empty-cat" style="border:none;">등록된 계정이 없습니다.<br><button class="mini violet" onclick="addAccount()">+ 첫 계정 추가</button></div></td></tr>`;
+
+  el.innerHTML = `
+    <div class="card">
+      <div class="card-head">
+        <div class="card-title"><h3>🔐 계정 정리</h3></div>
+        <button class="mini violet" onclick="addAccount()">+ 계정 추가</button>
+      </div>
+      <div style="font-size:12px;color:var(--text-faint);">
+        프로젝트에 속하지 않는 공용 계정(호스팅, API, 광고 플랫폼, 도메인 등록업체 등)을 모아두는 곳입니다.
+        계정 목록은 기기 간 동기화되지만, <b>비밀번호는 보안을 위해 이 기기에만 저장</b>되어 다른 기기에서는 다시 입력해야 합니다.
+      </div>
+      ${data.accounts.length ? filterChips : ''}
+      <div class="account-table-wrap">
+        <table class="account-table">
+          <thead>
+            <tr><th>서비스</th><th>링크</th><th>아이디</th><th>비밀번호</th><th>메모</th><th></th></tr>
+          </thead>
+          <tbody>${bodyRows}</tbody>
+        </table>
+      </div>
+    </div>
+  `;
+}
+function setAccountFilter(cat){ activeAccountFilter = cat; renderAccountsContent(); }
+
+function addCategory(){
+  showFormModal('분류 추가', [
+    {key:'name', label:'분류 이름', placeholder:'예: SNS, 결제/PG, 이메일'}
+  ], (r)=>{
+    const name = r.name.trim();
+    if(!name) return;
+    if(data.accountCategories.includes(name)){ alert('이미 있는 분류입니다.'); return; }
+    data.accountCategories.push(name);
+    save(); renderAccountsContent();
+  });
+}
+function renameCategory(oldName){
+  showFormModal('분류 이름 수정', [
+    {key:'name', label:'분류 이름', value:oldName}
+  ], (r)=>{
+    const name = r.name.trim();
+    if(!name || name===oldName) return;
+    if(data.accountCategories.includes(name)){ alert('이미 있는 분류 이름입니다.'); return; }
+    const idx = data.accountCategories.indexOf(oldName);
+    if(idx>-1) data.accountCategories[idx] = name;
+    data.accounts.forEach(a=>{ if(a.category===oldName) a.category = name; });
+    if(activeAccountFilter===oldName) activeAccountFilter = name;
+    save(); renderAccountsContent();
+  });
+}
+function deleteCategory(name){
+  const count = data.accounts.filter(a=>a.category===name).length;
+  const msg = count>0
+    ? `"${name}" 분류를 삭제할까요?\n이 분류를 쓰는 계정 ${count}개는 분류 없음으로 바뀝니다 (계정 자체는 유지됩니다).`
+    : `"${name}" 분류를 삭제할까요?`;
+  if(!confirm(msg)) return;
+  data.accountCategories = data.accountCategories.filter(c=>c!==name);
+  data.accounts.forEach(a=>{ if(a.category===name) a.category=''; });
+  if(activeAccountFilter===name) activeAccountFilter='all';
+  save(); renderAccountsContent();
+}
+
+function addAccount(){
+  showFormModal('계정 추가', [
+    {key:'name', label:'서비스 이름', placeholder:'예: Vercel, Supabase, 카페24, 은행 OTP'},
+    {key:'url', label:'로그인 페이지 URL', placeholder:'https://...'},
+    {key:'username', label:'아이디'},
+    {key:'pw', label:'비밀번호 (이 기기에만 저장)', type:'password'},
+    {key:'category', label:'분류', type:'select', options:['', ...data.accountCategories], value:''},
+    {key:'note', label:'메모', type:'textarea'},
+  ], (r)=>{
+    if(!r.name.trim()) return;
+    data.accounts.push({
+      id:'acc'+Date.now(), name:r.name.trim(), url:r.url.trim(), username:r.username.trim(),
+      pw:r.pw, category:r.category.trim(), note:r.note.trim(), showPw:false
+    });
+    save(); renderAccountsContent();
+  });
+}
+function editAccount(id){
+  const a = data.accounts.find(x=>x.id===id);
+  if(!a) return;
+  showFormModal('계정 수정', [
+    {key:'name', label:'서비스 이름', value:a.name},
+    {key:'url', label:'로그인 페이지 URL', value:a.url},
+    {key:'username', label:'아이디', value:a.username},
+    {key:'pw', label:'비밀번호 (이 기기에만 저장)', type:'password', value:a.pw},
+    {key:'category', label:'분류', type:'select', options:['', ...data.accountCategories], value:a.category},
+    {key:'note', label:'메모', type:'textarea', value:a.note},
+  ], (r)=>{
+    if(!r.name.trim()) return;
+    a.name=r.name.trim(); a.url=r.url.trim(); a.username=r.username.trim();
+    a.pw=r.pw; a.category=r.category.trim(); a.note=r.note.trim();
+    save(); renderAccountsContent();
+  });
+}
+function deleteAccount(id){
+  const a = data.accounts.find(x=>x.id===id);
+  if(!a) return;
+  if(!confirm(`"${a.name}" 계정을 삭제할까요?`)) return;
+  data.accounts = data.accounts.filter(x=>x.id!==id);
+  save(); renderAccountsContent();
+}
+function toggleAccountPw(id){
+  const a = data.accounts.find(x=>x.id===id);
+  if(!a) return;
+  a.showPw = !a.showPw;
+  save(); renderAccountsContent();
+}
+function copyAccountField(id, field){
+  const a = data.accounts.find(x=>x.id===id);
+  if(!a) return;
+  const text = field==='username' ? (a.username||'') : (a.pw||'');
+  if(!text){ alert('복사할 내용이 없습니다.'); return; }
+  navigator.clipboard.writeText(text)
+    .then(()=>alert((field==='username'?'아이디':'비밀번호') + '가 복사되었습니다.'))
+    .catch(()=>alert('복사에 실패했습니다.'));
+}
+function updateWorkTitle(vi, val){ data.ventures[vi].workTitle = val; save(); }
+function copyWorkTitle(vi){
+  const t = data.ventures[vi].workTitle || '';
+  if(!t){ alert('복사할 제목이 없습니다.'); return; }
+  navigator.clipboard.writeText(t).then(()=>alert('제목이 복사되었습니다.')).catch(()=>alert('복사 실패'));
+}
+
+async function generateTitle(vi){
+  const v = data.ventures[vi];
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  const source = (v.workBody && v.workBody.trim()) || (document.getElementById('workTopic') ? document.getElementById('workTopic').value.trim() : v.workTopic);
+  if(!source){ alert('먼저 글을 생성하거나 주제를 입력하세요.'); return; }
+  const btn = document.getElementById('genTitleBtn');
+  btn.disabled = true; btn.textContent = '생성 중...';
+  const sugEl = document.getElementById('titleSuggestions');
+  try{
+    const model = data.settings.textModel || 'gemini-2.5-flash';
+    const sysPrompt = '너는 네이버 블로그 제목 작성 전문가다. 주어진 글(또는 주제)에 어울리는 클릭을 부르는 한국어 제목 5개를 만들어라. 검색 키워드가 자연스럽게 포함되게 하고, 낚시성 과장은 피한다. 응답은 반드시 JSON 배열만 출력: ["제목1","제목2","제목3","제목4","제목5"]. 다른 텍스트나 백틱 없이.';
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        systemInstruction:{parts:[{text: sysPrompt}]},
+        contents:[{role:'user', parts:[{text: source.slice(0, 4000)}]}]
+      })
+    });
+    const json = await res.json();
+    if(!res.ok){ throw new Error((json.error && json.error.message) || ('요청 실패 (' + res.status + ')')); }
+    const respParts = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+    let text = respParts.map(p=>p.text||'').join('\n').replace(/```json|```/g,'').trim();
+    const arrMatch = text.match(/\[[\s\S]*\]/);
+    if(!arrMatch) throw new Error('제목 결과를 해석하지 못했습니다. 다시 시도해주세요.');
+    const titles = JSON.parse(arrMatch[0]).filter(t=>typeof t==='string' && t.trim());
+    sugEl.innerHTML = titles.map(t=>`
+      <div class="preset-chip" style="margin-bottom:4px; display:flex;" onclick="pickTitle(${vi}, this.textContent)">${esc(t)}</div>
+    `).join('') + `<div style="font-size:11.5px;color:var(--text-faint);margin-top:4px;">마음에 드는 제목을 클릭하면 위 제목칸에 들어갑니다.</div>`;
+  }catch(e){
+    alert('제목 생성 실패: ' + e.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '제목 생성';
+  }
+}
+function pickTitle(vi, title){
+  data.ventures[vi].workTitle = title.trim();
+  save();
+  const inp = document.getElementById('workTitle');
+  if(inp) inp.value = title.trim();
+}
+
+async function generateThumbnail(vi){
+  const v = data.ventures[vi];
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  const body = (v.workBody||'').trim();
+  if(!body){ alert('먼저 글을 생성하세요. 생성된 글 내용을 바탕으로 썸네일을 만듭니다.'); return; }
+  const btn = document.getElementById('genThumbBtn');
+  btn.disabled = true; btn.textContent = '썸네일 생성 중...';
+  try{
+    const model = data.settings.imageModel || 'gemini-3.1-flash-image';
+    const thumbPrompt = '다음 블로그 글의 핵심 내용을 한눈에 표현하는 정사각형(1:1) 블로그 썸네일 이미지를 만들어줘. 밝고 깔끔한 스타일, 글자나 텍스트는 넣지 말 것.\n\n' + (v.workTitle ? '제목: ' + v.workTitle + '\n\n' : '') + '글 내용:\n' + body.slice(0, 3000);
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        contents:[{role:'user', parts:[{text: thumbPrompt}]}],
+        generationConfig:{ responseModalities:['IMAGE','TEXT'], imageConfig:{ aspectRatio:'1:1' } }
+      })
+    });
+    const json = await res.json();
+    if(!res.ok){ throw new Error((json.error && json.error.message) || ('요청 실패 (' + res.status + ')')); }
+    const respParts = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+    const imgPart = respParts.find(p=>p.inlineData);
+    if(!imgPart) throw new Error('이미지가 반환되지 않았습니다. 다시 시도해주세요.');
+    const rawUrl = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
+    const squared = await resizeToSquare(rawUrl, 1000);
+    if(!attachments[v.id]) attachments[v.id] = [];
+    attachments[v.id].push({ id:'a'+Date.now(), dataUrl:squared, name:'썸네일 1000x1000' });
+    renderContentArea();
+    alert('썸네일이 첨부 이미지에 추가되었습니다 (1000×1000).');
+  }catch(e){
+    alert('썸네일 생성 실패: ' + e.message);
+  } finally {
+    const b = document.getElementById('genThumbBtn');
+    if(b){ b.disabled=false; b.textContent='🖼 썸네일 자동 생성 (1000×1000)'; }
+  }
+}
+function resizeToSquare(dataUrl, size){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      const c = document.createElement('canvas');
+      c.width = size; c.height = size;
+      const ctx = c.getContext('2d');
+      // cover 방식: 짧은 변 기준으로 중앙 크롭해서 정확히 size x size로
+      const side = Math.min(img.naturalWidth, img.naturalHeight);
+      const sx = (img.naturalWidth - side) / 2;
+      const sy = (img.naturalHeight - side) / 2;
+      ctx.drawImage(img, sx, sy, side, side, 0, 0, size, size);
+      resolve(c.toDataURL('image/png'));
+    };
+    img.onerror = ()=>reject(new Error('이미지 처리 실패'));
+    img.src = dataUrl;
+  });
+}
+
+// ---------- image attachments (in-memory) ----------
+function handleAttachFiles(fileList, ventureId){
+  const files = Array.from(fileList||[]).filter(f=>f.type.startsWith('image/'));
+  if(!files.length) return;
+  if(!attachments[ventureId]) attachments[ventureId] = [];
+  let remaining = files.length;
+  files.forEach(f=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      attachments[ventureId].push({ id:'a'+Date.now()+Math.random().toString(36).slice(2,6), dataUrl:reader.result, name:f.name });
+      remaining--;
+      if(remaining===0) renderContentArea();
+    };
+    reader.onerror = ()=>{ remaining--; if(remaining===0) renderContentArea(); };
+    reader.readAsDataURL(f);
+  });
+}
+function addGeneratedToAttachments(ventureId){
+  const img = imageCache[ventureId];
+  if(!img){ alert('먼저 이미지를 생성하세요.'); return; }
+  if(!attachments[ventureId]) attachments[ventureId] = [];
+  attachments[ventureId].push({ id:'a'+Date.now(), dataUrl:img, name:'AI 생성 이미지' });
+  renderContentArea();
+}
+function removeAttachment(ventureId, ai){
+  if(!attachments[ventureId]) return;
+  attachments[ventureId].splice(ai,1);
+  renderContentArea();
+}
+function downloadAttachment(ventureId, ai){
+  const a = (attachments[ventureId]||[])[ai];
+  if(!a) return;
+  const link = document.createElement('a');
+  link.href = a.dataUrl;
+  const ext = (a.dataUrl.match(/^data:image\/(\w+)/)||[])[1] || 'png';
+  link.download = (a.name && a.name.includes('.')) ? a.name : `blog-image-${ai+1}.${ext}`;
+  document.body.appendChild(link); link.click(); link.remove();
+}
+async function copyAttachment(ventureId, ai){
+  const a = (attachments[ventureId]||[])[ai];
+  if(!a) return;
+  if(!navigator.clipboard || !window.ClipboardItem){
+    alert('이 브라우저는 이미지 클립보드 복사를 지원하지 않습니다. "저장" 후 파일로 첨부해주세요.');
+    return;
+  }
+  try{
+    const blob = await (await fetch(a.dataUrl)).blob();
+    // 클립보드는 PNG를 가장 안정적으로 지원하므로 다른 포맷이면 캔버스로 변환
+    let pngBlob = blob;
+    if(blob.type !== 'image/png'){
+      pngBlob = await new Promise((resolve,reject)=>{
+        const img = new Image();
+        img.onload = ()=>{
+          const c = document.createElement('canvas');
+          c.width = img.naturalWidth; c.height = img.naturalHeight;
+          c.getContext('2d').drawImage(img,0,0);
+          c.toBlob(b=>b?resolve(b):reject(new Error('변환 실패')), 'image/png');
+        };
+        img.onerror = reject;
+        img.src = a.dataUrl;
+      });
+    }
+    await navigator.clipboard.write([new ClipboardItem({'image/png': pngBlob})]);
+    alert('이미지가 복사되었습니다. 네이버 에디터에서 Ctrl+V 하세요.');
+  }catch(e){
+    alert('복사 실패: ' + e.message + '\n"저장" 버튼으로 파일 저장 후 첨부해주세요.');
+  }
+}
+function wireAttachDropzone(ventureId){
+  const drop = document.getElementById('attachDrop');
+  if(!drop) return;
+  drop.ondragover = e=>{ e.preventDefault(); drop.classList.add('dragover'); };
+  drop.ondragleave = ()=>drop.classList.remove('dragover');
+  drop.ondrop = e=>{
+    e.preventDefault(); drop.classList.remove('dragover');
+    handleAttachFiles(e.dataTransfer.files, ventureId);
+  };
+}
+
+// ---------- reference images for text generation ----------
+function handleRefFiles(fileList, ventureId){
+  const files = Array.from(fileList||[]).filter(f=>f.type.startsWith('image/'));
+  if(!files.length) return;
+  if(!refImages[ventureId]) refImages[ventureId] = [];
+  const room = 5 - refImages[ventureId].length;
+  if(room <= 0){ alert('참고 이미지는 최대 5장까지 첨부할 수 있습니다.'); return; }
+  let remaining = Math.min(files.length, room);
+  files.slice(0, room).forEach(f=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      refImages[ventureId].push({ dataUrl:reader.result, name:f.name });
+      remaining--;
+      if(remaining===0) renderContentArea();
+    };
+    reader.onerror = ()=>{ remaining--; if(remaining===0) renderContentArea(); };
+    reader.readAsDataURL(f);
+  });
+}
+function removeRefImage(ventureId, ri){
+  if(!refImages[ventureId]) return;
+  refImages[ventureId].splice(ri,1);
+  renderContentArea();
+}
+function updateWorkBody(vi, val){ data.ventures[vi].workBody = val; save(); }
+function copyWorkBody(vi){
+  const text = data.ventures[vi].workBody || '';
+  if(!text){ alert('복사할 내용이 없습니다.'); return; }
+  navigator.clipboard.writeText(text).then(()=>alert('본문이 복사되었습니다.')).catch(()=>alert('복사에 실패했습니다. 직접 선택해서 복사해주세요.'));
+}
+
+async function generateText(vi){
+  const v = data.ventures[vi];
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  const topicInp = document.getElementById('workTopic');
+  const topic = topicInp.value.trim();
+  const hasRefImages = (refImages[v.id]||[]).length > 0;
+  if(!topic && !hasRefImages){ alert('주제를 입력하거나 참고 이미지를 첨부하세요.'); return; }
+  v.workTopic = topic; save();
+  const btn = document.getElementById('genTextBtn');
+  btn.disabled = true; btn.textContent = '생성 중...';
+  try{
+    const model = data.settings.textModel || 'gemini-2.5-flash';
+    const parts = [{text: topic || '첨부한 이미지를 보고 어울리는 블로그 글을 작성해줘.'}];
+    // 참고 이미지가 있으면 함께 전송 (Gemini가 이미지를 보고 글 작성)
+    (refImages[v.id]||[]).forEach(r=>{
+      const match = r.dataUrl.match(/^data:(image\/[\w.+-]+);base64,(.+)$/s);
+      if(match){ parts.push({ inline_data:{ mime_type: match[1], data: match[2] } }); }
+    });
+    const body = { contents:[{role:'user', parts}] };
+    if(v.prompt && v.prompt.trim()){ body.systemInstruction = {parts:[{text: v.prompt}]}; }
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body)
+    });
+    const json = await res.json();
+    if(!res.ok){ throw new Error((json.error && json.error.message) || ('요청 실패 (' + res.status + ')')); }
+    const respParts = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+    const text = respParts.map(p=>p.text||'').join('\n').trim();
+    v.workBody = text || '(생성된 내용이 없습니다)';
+    save(); renderContentArea();
+  }catch(e){
+    alert('글 생성 실패: ' + e.message);
+  } finally {
+    const b = document.getElementById('genTextBtn');
+    if(b){ b.disabled=false; b.textContent='글 생성'; }
+  }
+}
+
+async function generateImage(vi){
+  const v = data.ventures[vi];
+  const key = data.settings.geminiApiKey;
+  if(!key){ alert('먼저 ⚙ API 설정에서 Gemini API 키를 입력하세요.'); toggleSettings(); return; }
+  const imgPromptInp = document.getElementById('imgPrompt');
+  const prompt = (imgPromptInp.value.trim()) || v.workTopic || '';
+  if(!prompt){ alert('이미지 프롬프트나 주제를 입력하세요.'); return; }
+  const btn = document.getElementById('genImgBtn');
+  btn.disabled = true; btn.textContent = '생성 중...';
+  try{
+    const model = data.settings.imageModel || 'gemini-3.1-flash-image';
+    const genParts = [{text: prompt}];
+    const useRefs = document.getElementById('imgUseRefs');
+    if(useRefs && useRefs.checked){
+      (refImages[v.id]||[]).forEach(r=>{
+        const match = r.dataUrl.match(/^data:(image\/[\w.+-]+);base64,(.+)$/s);
+        if(match){ genParts.push({ inline_data:{ mime_type: match[1], data: match[2] } }); }
+      });
+    }
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(key)}`, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        contents:[{role:'user', parts: genParts}],
+        generationConfig:{ responseModalities:['IMAGE','TEXT'] }
+      })
+    });
+    const json = await res.json();
+    if(!res.ok){ throw new Error((json.error && json.error.message) || ('요청 실패 (' + res.status + ')')); }
+    const parts = (json.candidates && json.candidates[0] && json.candidates[0].content && json.candidates[0].content.parts) || [];
+    const imgPart = parts.find(p=>p.inlineData);
+    if(!imgPart){ throw new Error('이미지가 반환되지 않았습니다. 프롬프트를 조금 더 구체적으로 적어보세요.'); }
+    const dataUrl = `data:${imgPart.inlineData.mimeType};base64,${imgPart.inlineData.data}`;
+    imageCache[v.id] = dataUrl;
+    renderContentArea();
+  }catch(e){
+    alert('이미지 생성 실패: ' + e.message);
+  } finally {
+    const b = document.getElementById('genImgBtn');
+    if(b){ b.disabled=false; b.textContent='이미지 생성'; }
+  }
+}
+
+function cycleStatus(vi){
+  const cur = data.ventures[vi].status;
+  const next = statusOrder[(statusOrder.indexOf(cur)+1) % statusOrder.length];
+  data.ventures[vi].status = next;
+  save(); renderTabbar(); renderSecondaryNav(); renderContentArea();
+}
+function addLink(vi){
+  showFormModal('링크 추가', [
+    {key:'label', label:'링크 이름', placeholder:'예: 사이트, GitHub'},
+    {key:'url', label:'URL'},
+  ], (r)=>{
+    if(!r.label.trim() || !r.url.trim()) return;
+    data.ventures[vi].links.push({label:r.label.trim(), url:r.url.trim()});
+    save(); renderContentArea();
+  });
+}
+function delLink(vi, li){
+  const l = data.ventures[vi].links[li];
+  if(!confirm(`링크 "${l.label}"을(를) 삭제할까요?`)) return;
+  data.ventures[vi].links.splice(li,1);
+  save(); renderContentArea();
+}
+function addTodo(vi){
+  const inp = document.getElementById('todoInput');
+  const text = inp.value.trim();
+  if(!text) return;
+  data.ventures[vi].todos.push({text, done:false});
+  save(); renderContentArea();
+}
+function toggleTodo(vi,ti){ data.ventures[vi].todos[ti].done = !data.ventures[vi].todos[ti].done; save(); renderContentArea(); }
+function delTodo(vi,ti){ data.ventures[vi].todos.splice(ti,1); save(); renderContentArea(); }
+function updateNote(vi, val){ data.ventures[vi].note = val; save(); }
+
+function removeVenture(vi){
+  const v = data.ventures[vi];
+  if(!confirm(`"${v.name}" 프로젝트를 삭제할까요?\n(할일·메모·관리자 정보가 함께 삭제됩니다)`)) return;
+  delete imageCache[v.id];
+  data.ventures.splice(vi,1);
+  save(); renderAll();
+}
+function renameVenture(vi){
+  const v = data.ventures[vi];
+  const name = prompt('새 이름 입력', v.name);
+  if(!name || !name.trim()) return;
+  v.name = name.trim();
+  save(); renderAll();
+}
+function addVenture(category, group){
+  const catLabel = CATEGORIES.find(c=>c.id===category).label;
+  const label = group ? (BLOG_GROUPS.find(g=>g.id===group) ? BLOG_GROUPS.find(g=>g.id===group).label : catLabel) : catLabel;
+  showFormModal(`${label}에 프로젝트 추가`, [
+    {key:'name', label:'프로젝트 이름'},
+    {key:'url', label:'사이트 URL (선택)'},
+  ], (r)=>{
+    if(!r.name.trim()) return;
+    const id = 'v'+Date.now();
+    const newV = { id, category, name:r.name.trim(), status:'ok', links:[], todos:[], note:'', adminUrl:'', adminId:'', adminPw:'', adminEmbedOpen:false, showPw:false };
+    if(r.url.trim()) newV.links.push({label:'사이트', url:r.url.trim()});
+    if(category==='blog'){
+      newV.group = group || data.activeBlogGroup || 'blogspot';
+      if(newV.group === 'naver'){ newV.prompt=''; newV.workTopic=''; newV.workBody=''; newV.workTitle=''; }
+    }
+    data.ventures.push(newV);
+    data.activeCategory = category;
+    if(category==='blog'){ data.activeBlogGroup = newV.group; data.activeVenture['blog']=id; }
+    else data.activeVenture[category] = id;
+    save(); renderAll();
+  });
+}
+
+function esc(s){ return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escAttr(s){ return esc(s); }
+
+// ---------- generic multi-field form modal (replaces chained prompt()s) ----------
+let __modalSubmit = null;
+function showFormModal(title, fields, onSubmit){
+  const overlay = document.getElementById('modalOverlay');
+  const box = document.getElementById('modalBox');
+  box.innerHTML = `
+    <h3>${esc(title)}</h3>
+    <div id="modalFields">
+      ${fields.map(f => `
+        <div class="modal-field">
+          <label>${esc(f.label)}</label>
+          ${f.type === 'textarea'
+            ? `<textarea id="mf_${f.key}" placeholder="${escAttr(f.placeholder||'')}">${esc(f.value||'')}</textarea>`
+            : f.type === 'select'
+            ? `<select id="mf_${f.key}">${(f.options||[]).map(o=>`<option value="${escAttr(o)}" ${o===f.value?'selected':''}>${esc(o||'(선택 안 함)')}</option>`).join('')}</select>`
+            : `<input type="${f.type||'text'}" id="mf_${f.key}" placeholder="${escAttr(f.placeholder||'')}" value="${escAttr(f.value||'')}">`
+          }
+        </div>
+      `).join('')}
+    </div>
+    <div class="modal-actions">
+      <button class="mini" onclick="closeFormModal()">취소</button>
+      <button class="mini violet" onclick="submitFormModal()">저장</button>
+    </div>
+  `;
+  overlay.classList.add('open');
+  __modalSubmit = () => {
+    const result = {};
+    fields.forEach(f => { result[f.key] = document.getElementById('mf_'+f.key).value; });
+    closeFormModal();
+    onSubmit(result);
+  };
+  document.getElementById('modalFields').addEventListener('keydown', e=>{
+    if(e.key==='Enter' && e.target.tagName!=='TEXTAREA'){ e.preventDefault(); submitFormModal(); }
+  });
+  setTimeout(()=>{
+    const first = document.getElementById('mf_'+fields[0].key);
+    if(first) first.focus();
+  }, 30);
+}
+function submitFormModal(){ if(__modalSubmit) __modalSubmit(); }
+function closeFormModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+  __modalSubmit = null;
+}
+document.getElementById('modalOverlay').addEventListener('click', e=>{
+  if(e.target.id === 'modalOverlay') closeFormModal();
+});
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') closeFormModal();
+});
+
+function renderAll(){
+  renderQuicklinks();
+  renderPriorities();
+  renderTabbar();
+  renderSecondaryNav();
+  renderContentArea();
+}
+
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.getElementById('priorityInput').addEventListener('keydown', e=>{ if(e.key==='Enter') addPriority(); });
+});
+
+// 드롭존 밖에 파일을 떨어뜨려도 브라우저가 페이지를 이탈해 이미지를 열지 않도록 방지
+window.addEventListener('dragover', e=>e.preventDefault());
+window.addEventListener('drop', e=>e.preventDefault());
+
+// 클립보드 이미지 붙여넣기 (Ctrl+V): 현재 보고 있는 화면에 맞는 곳으로 이미지 추가
+document.addEventListener('paste', e=>{
+  const items = Array.from((e.clipboardData||{}).items||[]);
+  const imgItems = items.filter(it=>it.type && it.type.startsWith('image/'));
+  if(!imgItems.length) return; // 텍스트 붙여넣기는 평소대로 동작
+  const files = imgItems.map(it=>it.getAsFile()).filter(Boolean);
+  if(!files.length) return;
+
+  if(data.activeCategory === 'imagegen'){
+    e.preventDefault();
+    handleStudioRefFiles(files);
+    return;
+  }
+  // 네이버블로그 글쓰기 카드가 열려있으면 참고 이미지로 추가
+  const activeId = data.activeVenture[data.activeCategory];
+  const v = data.ventures.find(x=>x.id===activeId);
+  if(v && v.category==='blog' && v.group==='naver'){
+    e.preventDefault();
+    handleRefFiles(files, v.id);
+  }
+});
+
+async function boot(){
+  const linkApplied = applySyncLinkFromUrl();
+
+  // 원격 동기화가 켜져 있으면, 이 기기의 로컬(혹은 방금 적용된 기본값) 데이터로
+  // 아무것도 저장/전송하기 전에 먼저 서버의 최신 데이터를 받아온다.
+  // 순서를 반대로 하면 새 기기의 텅 빈 초기 상태가 서버의 진짜 데이터를
+  // 덮어써버리는 사고가 날 수 있다 (실제로 한 번 발생했던 문제).
+  if(syncEnabled()){
+    await pullSync(true);
+  } else if(linkApplied){
+    // 링크로 설정만 적용되고 아직 동기화 판단이 안 된 극히 예외적인 경우 대비
+    localStorage.setItem(STORAGE_KEY_V4, JSON.stringify(data));
+  }
+
+  // 원격 데이터를 반영한 뒤(또는 원격이 없어 로컬 데이터 그대로인 채로) 1회성 마이그레이션 수행
+  const changed1 = migrateQuicklinksToAccounts();
+  const changed2 = seedFreeKeywordTools();
+  if(changed1 || changed2){
+    save(); // 여기서의 save()는 이미 원격 데이터를 받은 '이후'라 안전하게 push된다
+  } else if(linkApplied){
+    localStorage.setItem(STORAGE_KEY_V4, JSON.stringify(data));
+  }
+
+  renderAll();
+
+  // 이후: 창으로 돌아올 때, 그리고 60초마다 다른 기기의 변경사항 확인
+  window.addEventListener('focus', ()=>{ if(syncEnabled()) pullSync(true); });
+  setInterval(()=>{ if(syncEnabled() && !document.hidden) pullSync(true); }, 60000);
+}
+boot();
+</script>
+</body>
+</html>
