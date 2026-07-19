@@ -66,7 +66,7 @@ function naverHeaders(method, uri) {
 async function fetchRelatedKeywords(seedBatch) {
   const uri    = '/keywordstool';
   const params = new URLSearchParams({
-    hintKeywords: seedBatch.join(','),
+    hintKeywords: seedBatch.map(s => s.replace(/\s+/g, '')).join(','),
     showDetail  : '1',
   });
   try {
