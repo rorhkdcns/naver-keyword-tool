@@ -41,6 +41,21 @@ const SEED_KEYWORDS = [
   '자기관리 루틴', '웰니스템 추천', '힐링 아이템 추천', '스트레스 해소 아이템',
 ];
 
+// ════════════════════════════════════════════════════════════
+//  주제 관련성 필터 — 네이버 연관키워드가 시드와 상관없는 방향으로
+//  넓게 확장되는 경우가 많아, 이 단어들 중 하나라도 포함된
+//  키워드만 최종 후보로 남긴다.
+//  ⚠️ 형이 조정할 부분: 실제로 다룰 주제 범위에 맞게 단어 추가/삭제
+// ════════════════════════════════════════════════════════════
+const THEME_ANCHORS = [
+  '셀프케어', '자기관리', '건강관리', '컨디션', '웰빙', '웰니스', '힐링',
+  '커플', '신혼', '부부', '연인', '데이트', '기념일', '선물',
+  '바디케어', '스킨케어', '보습',
+];
+function isOnTheme(keyword){
+  return THEME_ANCHORS.some(w => keyword.includes(w));
+}
+
 function dateStamp() {
   return new Date().toISOString().slice(0,10).replace(/-/g,'');
 }
@@ -150,8 +165,11 @@ async function main() {
 
   log(`📦 연관키워드 총 ${collected.size}개 수집`);
 
+  const onTheme = [...collected.values()].filter(row => isOnTheme(row.relKeyword));
+  log(`🎯 주제 관련성 필터 통과: ${onTheme.length}개 (전체 ${collected.size}개 중)`);
+
   const scored = [];
-  for (const row of collected.values()) {
+  for (const row of onTheme) {
     const { pc, mobile, total, score } = scoreKeyword(row);
     scored.push({
       keyword: row.relKeyword,
