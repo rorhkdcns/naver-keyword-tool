@@ -1,25 +1,25 @@
 {
-  "updatedAt": "2026-10-30T00:31:31.374Z",
-  "dateStamp": "20261030",
+  "updatedAt": "2026-10-31T00:17:04.325Z",
+  "dateStamp": "20261031",
   "total": 145,
-  "recommended": 20,
+  "recommended": 21,
   "keywords": [
     {
       "keyword": "건강관리협회",
-      "pc": 8490,
-      "mobile": 32700,
-      "total": 41190,
+      "pc": 8390,
+      "mobile": 32400,
+      "total": 40790,
       "compIdx": "낮음",
-      "score": 41190,
+      "score": 40790,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "웰니스",
-      "pc": 5910,
-      "mobile": 26300,
-      "total": 32210,
+      "pc": 5820,
+      "mobile": 25900,
+      "total": 31720,
       "compIdx": "높음",
-      "score": 6442,
+      "score": 6344,
       "diagnoseTag": "포스팅추천"
     },
     {
@@ -33,53 +33,53 @@
     },
     {
       "keyword": "보습크림",
-      "pc": 1230,
-      "mobile": 8520,
-      "total": 9750,
+      "pc": 1240,
+      "mobile": 8600,
+      "total": 9840,
       "compIdx": "중간",
-      "score": 3900,
+      "score": 3936,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "수면영양제",
-      "pc": 990,
-      "mobile": 5710,
-      "total": 6700,
+      "pc": 1040,
+      "mobile": 5620,
+      "total": 6660,
       "compIdx": "중간",
-      "score": 2680,
+      "score": 2664,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "스킨케어",
-      "pc": 7200,
-      "mobile": 3000,
-      "total": 10200,
+      "pc": 7260,
+      "mobile": 3010,
+      "total": 10270,
       "compIdx": "높음",
-      "score": 2040,
+      "score": 2054,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "수면",
-      "pc": 980,
-      "mobile": 3570,
-      "total": 4550,
+      "pc": 960,
+      "mobile": 3520,
+      "total": 4480,
       "compIdx": "중간",
-      "score": 1820,
+      "score": 1792,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "힐링",
-      "pc": 990,
-      "mobile": 7410,
-      "total": 8400,
+      "pc": 1010,
+      "mobile": 7380,
+      "total": 8390,
       "compIdx": "높음",
-      "score": 1680,
+      "score": 1678,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "스트레스해소법",
-      "pc": 760,
-      "mobile": 4460,
+      "pc": 770,
+      "mobile": 4450,
       "total": 5220,
       "compIdx": "높음",
       "score": 1044,
@@ -88,46 +88,46 @@
     {
       "keyword": "자기관리",
       "pc": 210,
-      "mobile": 770,
-      "total": 980,
+      "mobile": 750,
+      "total": 960,
       "compIdx": "낮음",
-      "score": 980,
+      "score": 960,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "릴렉스",
-      "pc": 490,
-      "mobile": 3040,
-      "total": 3530,
+      "pc": 480,
+      "mobile": 3020,
+      "total": 3500,
       "compIdx": "높음",
-      "score": 706,
+      "score": 700,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "보습제",
       "pc": 340,
-      "mobile": 1270,
-      "total": 1610,
+      "mobile": 1280,
+      "total": 1620,
       "compIdx": "중간",
-      "score": 644,
+      "score": 648,
+      "diagnoseTag": "포스팅추천"
+    },
+    {
+      "keyword": "바디케어",
+      "pc": 390,
+      "mobile": 1180,
+      "total": 1570,
+      "compIdx": "중간",
+      "score": 628,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "피부보습제",
       "pc": 340,
-      "mobile": 2730,
-      "total": 3070,
+      "mobile": 2790,
+      "total": 3130,
       "compIdx": "높음",
-      "score": 614,
-      "diagnoseTag": "포스팅추천"
-    },
-    {
-      "keyword": "바디케어",
-      "pc": 260,
-      "mobile": 1190,
-      "total": 1450,
-      "compIdx": "중간",
-      "score": 580,
+      "score": 626,
       "diagnoseTag": "포스팅추천"
     },
     {
@@ -151,25 +151,25 @@
     {
       "keyword": "웰니스호텔",
       "pc": 380,
-      "mobile": 1400,
-      "total": 1780,
+      "mobile": 1390,
+      "total": 1770,
       "compIdx": "높음",
-      "score": 356,
+      "score": 354,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "수면보조제",
       "pc": 350,
-      "mobile": 1320,
-      "total": 1670,
+      "mobile": 1300,
+      "total": 1650,
       "compIdx": "높음",
-      "score": 334,
+      "score": 330,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "보습",
-      "pc": 300,
-      "mobile": 1340,
+      "pc": 290,
+      "mobile": 1350,
       "total": 1640,
       "compIdx": "높음",
       "score": 328,
@@ -177,38 +177,29 @@
     },
     {
       "keyword": "보습로션",
-      "pc": 140,
-      "mobile": 650,
-      "total": 790,
+      "pc": 150,
+      "mobile": 660,
+      "total": 810,
       "compIdx": "중간",
-      "score": 316,
+      "score": 324,
       "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "수면젤리",
-      "pc": 110,
-      "mobile": 580,
-      "total": 690,
+      "pc": 140,
+      "mobile": 620,
+      "total": 760,
       "compIdx": "중간",
-      "score": 276,
-      "diagnoseTag": "검토"
-    },
-    {
-      "keyword": "수면유도",
-      "pc": 70,
-      "mobile": 410,
-      "total": 480,
-      "compIdx": "중간",
-      "score": 192,
-      "diagnoseTag": "검토"
+      "score": 304,
+      "diagnoseTag": "포스팅추천"
     },
     {
       "keyword": "건강관리",
       "pc": 350,
-      "mobile": 600,
-      "total": 950,
+      "mobile": 590,
+      "total": 940,
       "compIdx": "높음",
-      "score": 190,
+      "score": 188,
       "diagnoseTag": "검토"
     },
     {
@@ -221,72 +212,81 @@
       "diagnoseTag": "검토"
     },
     {
-      "keyword": "씨가드릴렉스",
-      "pc": 20,
-      "mobile": 160,
-      "total": 180,
-      "compIdx": "낮음",
-      "score": 180,
+      "keyword": "수면유도",
+      "pc": 70,
+      "mobile": 390,
+      "total": 460,
+      "compIdx": "중간",
+      "score": 184,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "힐링데이트",
-      "pc": 110,
-      "mobile": 730,
-      "total": 840,
+      "pc": 120,
+      "mobile": 750,
+      "total": 870,
       "compIdx": "높음",
-      "score": 168,
+      "score": 174,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "웰니스코어",
       "pc": 60,
-      "mobile": 330,
-      "total": 390,
+      "mobile": 340,
+      "total": 400,
       "compIdx": "중간",
-      "score": 156,
+      "score": 160,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "스킨케어세트",
-      "pc": 550,
+      "pc": 570,
       "mobile": 200,
-      "total": 750,
+      "total": 770,
       "compIdx": "높음",
+      "score": 154,
+      "diagnoseTag": "검토"
+    },
+    {
+      "keyword": "씨가드릴렉스",
+      "pc": 10,
+      "mobile": 140,
+      "total": 150,
+      "compIdx": "낮음",
       "score": 150,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "웰니스사료",
-      "pc": 70,
-      "mobile": 300,
-      "total": 370,
+      "pc": 60,
+      "mobile": 290,
+      "total": 350,
       "compIdx": "중간",
-      "score": 148,
+      "score": 140,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "스트레스해소",
-      "pc": 180,
-      "mobile": 520,
-      "total": 700,
+      "pc": 170,
+      "mobile": 510,
+      "total": 680,
       "compIdx": "높음",
-      "score": 140,
+      "score": 136,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "수면음료",
       "pc": 100,
-      "mobile": 510,
-      "total": 610,
+      "mobile": 490,
+      "total": 590,
       "compIdx": "높음",
-      "score": 122,
+      "score": 118,
       "diagnoseTag": "검토"
     },
     {
       "keyword": "웰니스프로그램",
-      "pc": 170,
-      "mobile": 280,
+      "pc": 180,
+      "mobile": 270,
       "total": 450,
       "compIdx": "높음",
       "score": 90,
@@ -295,10 +295,10 @@
     {
       "keyword": "웰니스여행",
       "pc": 110,
-      "mobile": 320,
-      "total": 430,
+      "mobile": 310,
+      "total": 420,
       "compIdx": "높음",
-      "score": 86,
+      "score": 84,
       "diagnoseTag": "보류"
     },
     {
@@ -322,19 +322,55 @@
     {
       "keyword": "셀프케어",
       "pc": 30,
-      "mobile": 290,
-      "total": 320,
+      "mobile": 300,
+      "total": 330,
       "compIdx": "높음",
-      "score": 64,
+      "score": 66,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "스킨케어추천",
+      "pc": 180,
+      "mobile": 150,
+      "total": 330,
+      "compIdx": "높음",
+      "score": 66,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "보습오일",
+      "pc": 30,
+      "mobile": 120,
+      "total": 150,
+      "compIdx": "중간",
+      "score": 60,
       "diagnoseTag": "보류"
     },
     {
       "keyword": "고보습바디크림",
-      "pc": 50,
+      "pc": 40,
       "mobile": 260,
-      "total": 310,
+      "total": 300,
       "compIdx": "높음",
-      "score": 62,
+      "score": 60,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "수면영양제추천",
+      "pc": 120,
+      "mobile": 170,
+      "total": 290,
+      "compIdx": "높음",
+      "score": 58,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "보습밤",
+      "pc": 40,
+      "mobile": 250,
+      "total": 290,
+      "compIdx": "높음",
+      "score": 58,
       "diagnoseTag": "보류"
     },
     {
@@ -347,54 +383,27 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "보습밤",
-      "pc": 40,
-      "mobile": 240,
-      "total": 280,
-      "compIdx": "높음",
-      "score": 56,
-      "diagnoseTag": "보류"
-    },
-    {
       "keyword": "웰니스관광",
-      "pc": 110,
-      "mobile": 150,
+      "pc": 120,
+      "mobile": 140,
       "total": 260,
       "compIdx": "높음",
       "score": 52,
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "보습오일",
-      "pc": 20,
-      "mobile": 110,
-      "total": 130,
-      "compIdx": "중간",
-      "score": 52,
-      "diagnoseTag": "보류"
-    },
-    {
       "keyword": "수면유도영양제",
       "pc": 30,
-      "mobile": 220,
-      "total": 250,
+      "mobile": 210,
+      "total": 240,
       "compIdx": "높음",
-      "score": 50,
+      "score": 48,
       "diagnoseTag": "보류"
     },
     {
       "keyword": "릴렉스테아닌",
       "pc": 60,
-      "mobile": 190,
-      "total": 250,
-      "compIdx": "높음",
-      "score": 50,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "수면장애에좋은음식",
-      "pc": 40,
-      "mobile": 200,
+      "mobile": 180,
       "total": 240,
       "compIdx": "높음",
       "score": 48,
@@ -410,21 +419,39 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "스킨케어샵",
-      "pc": 10,
-      "mobile": 220,
+      "keyword": "수면장애에좋은음식",
+      "pc": 40,
+      "mobile": 190,
       "total": 230,
       "compIdx": "높음",
       "score": 46,
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "스킨케어추천",
-      "pc": 80,
-      "mobile": 150,
-      "total": 230,
+      "keyword": "스킨케어샵",
+      "pc": 5,
+      "mobile": 210,
+      "total": 215,
       "compIdx": "높음",
-      "score": 46,
+      "score": 43,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "스킨케어브랜드",
+      "pc": 90,
+      "mobile": 120,
+      "total": 210,
+      "compIdx": "높음",
+      "score": 42,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "보습토너",
+      "pc": 30,
+      "mobile": 180,
+      "total": 210,
+      "compIdx": "높음",
+      "score": 42,
       "diagnoseTag": "보류"
     },
     {
@@ -464,30 +491,30 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "수면영양제추천",
-      "pc": 30,
-      "mobile": 170,
-      "total": 200,
-      "compIdx": "높음",
-      "score": 40,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "보습토너",
-      "pc": 30,
-      "mobile": 160,
-      "total": 190,
-      "compIdx": "높음",
-      "score": 38,
-      "diagnoseTag": "보류"
-    },
-    {
       "keyword": "수면질",
       "pc": 10,
       "mobile": 80,
       "total": 90,
       "compIdx": "중간",
       "score": 36,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "웰니스고양이사료",
+      "pc": 5,
+      "mobile": 80,
+      "total": 85,
+      "compIdx": "중간",
+      "score": 34,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "보습스킨",
+      "pc": 5,
+      "mobile": 80,
+      "total": 85,
+      "compIdx": "중간",
+      "score": 34,
       "diagnoseTag": "보류"
     },
     {
@@ -518,20 +545,11 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "웰니스고양이사료",
-      "pc": 5,
-      "mobile": 70,
-      "total": 75,
-      "compIdx": "중간",
-      "score": 30,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "보습스킨",
-      "pc": 5,
-      "mobile": 70,
-      "total": 75,
-      "compIdx": "중간",
+      "keyword": "스킨케어제품",
+      "pc": 20,
+      "mobile": 130,
+      "total": 150,
+      "compIdx": "높음",
       "score": 30,
       "diagnoseTag": "보류"
     },
@@ -542,15 +560,6 @@
       "total": 150,
       "compIdx": "높음",
       "score": 30,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "웰니스코어인도어",
-      "pc": 10,
-      "mobile": 60,
-      "total": 70,
-      "compIdx": "중간",
-      "score": 28,
       "diagnoseTag": "보류"
     },
     {
@@ -572,25 +581,16 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "스킨케어브랜드",
-      "pc": 60,
-      "mobile": 70,
-      "total": 130,
-      "compIdx": "높음",
-      "score": 26,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "스킨케어제품",
-      "pc": 20,
-      "mobile": 110,
-      "total": 130,
-      "compIdx": "높음",
-      "score": 26,
-      "diagnoseTag": "보류"
-    },
-    {
       "keyword": "유한양행웰니스",
+      "pc": 10,
+      "mobile": 50,
+      "total": 60,
+      "compIdx": "중간",
+      "score": 24,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "웰니스코어인도어",
       "pc": 10,
       "mobile": 50,
       "total": 60,
@@ -608,21 +608,21 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "수면건강",
-      "pc": 50,
-      "mobile": 70,
-      "total": 120,
-      "compIdx": "높음",
-      "score": 24,
-      "diagnoseTag": "보류"
-    },
-    {
       "keyword": "수면오일",
       "pc": 20,
       "mobile": 100,
       "total": 120,
       "compIdx": "높음",
       "score": 24,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "수면건강",
+      "pc": 50,
+      "mobile": 60,
+      "total": 110,
+      "compIdx": "높음",
+      "score": 22,
       "diagnoseTag": "보류"
     },
     {
@@ -653,34 +653,7 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "웰니스코어캔",
-      "pc": 5,
-      "mobile": 90,
-      "total": 95,
-      "compIdx": "높음",
-      "score": 19,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "바디케어샵",
-      "pc": 5,
-      "mobile": 90,
-      "total": 95,
-      "compIdx": "높음",
-      "score": 19,
-      "diagnoseTag": "보류"
-    },
-    {
       "keyword": "웰니스심플",
-      "pc": 5,
-      "mobile": 40,
-      "total": 45,
-      "compIdx": "중간",
-      "score": 18,
-      "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "힐링마을",
       "pc": 5,
       "mobile": 40,
       "total": 45,
@@ -696,6 +669,24 @@
       "compIdx": "중간",
       "score": 18,
       "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "웰니스코어캔",
+      "pc": 5,
+      "mobile": 80,
+      "total": 85,
+      "compIdx": "높음",
+      "score": 17,
+      "diagnoseTag": "보류"
+    },
+    {
+      "keyword": "바디케어샵",
+      "pc": 5,
+      "mobile": 80,
+      "total": 85,
+      "compIdx": "높음",
+      "score": 17,
+      "diagnoseTag": "보류"
     },
     {
       "keyword": "건강관리앱",
@@ -734,25 +725,34 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "웰니스코어사료",
+      "keyword": "웰니스스몰브리드",
       "pc": 5,
       "mobile": 30,
       "total": 35,
       "compIdx": "중간",
       "score": 14,
       "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "힐링마을",
+      "pc": 5,
+      "mobile": 30,
+      "total": 35,
+      "compIdx": "중간",
+      "score": 14,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "바디케어세트",
+      "pc": 50,
+      "mobile": 20,
+      "total": 70,
+      "compIdx": "높음",
+      "score": 14,
+      "diagnoseTag": "보류"
     },
     {
       "keyword": "웰니스캣",
-      "pc": 5,
-      "mobile": 30,
-      "total": 35,
-      "compIdx": "중간",
-      "score": 14,
-      "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "웰니스캣코어",
       "pc": 5,
       "mobile": 30,
       "total": 35,
@@ -785,15 +785,6 @@
       "total": 65,
       "compIdx": "높음",
       "score": 13,
-      "diagnoseTag": "보류"
-    },
-    {
-      "keyword": "바디케어세트",
-      "pc": 40,
-      "mobile": 20,
-      "total": 60,
-      "compIdx": "높음",
-      "score": 12,
       "diagnoseTag": "보류"
     },
     {
@@ -833,13 +824,13 @@
       "diagnoseTag": "보류"
     },
     {
-      "keyword": "웰니스스몰브리드",
-      "pc": 5,
+      "keyword": "기업힐링프로그램",
+      "pc": 30,
       "mobile": 20,
-      "total": 25,
-      "compIdx": "중간",
+      "total": 50,
+      "compIdx": "높음",
       "score": 10,
-      "diagnoseTag": "검색량부족"
+      "diagnoseTag": "보류"
     },
     {
       "keyword": "웰니스헬시웨이트",
@@ -847,6 +838,15 @@
       "mobile": 5,
       "total": 10,
       "compIdx": "낮음",
+      "score": 10,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "웰니스코어사료",
+      "pc": 5,
+      "mobile": 20,
+      "total": 25,
+      "compIdx": "중간",
       "score": 10,
       "diagnoseTag": "검색량부족"
     },
@@ -878,20 +878,20 @@
       "diagnoseTag": "검색량부족"
     },
     {
+      "keyword": "웰니스캣코어",
+      "pc": 5,
+      "mobile": 20,
+      "total": 25,
+      "compIdx": "중간",
+      "score": 10,
+      "diagnoseTag": "검색량부족"
+    },
+    {
       "keyword": "웰니스청키",
       "pc": 5,
       "mobile": 5,
       "total": 10,
       "compIdx": "낮음",
-      "score": 10,
-      "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "셀렉스릴렉스샷",
-      "pc": 5,
-      "mobile": 20,
-      "total": 25,
-      "compIdx": "중간",
       "score": 10,
       "diagnoseTag": "검색량부족"
     },
@@ -903,15 +903,6 @@
       "compIdx": "낮음",
       "score": 10,
       "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "수면옷",
-      "pc": 10,
-      "mobile": 40,
-      "total": 50,
-      "compIdx": "높음",
-      "score": 10,
-      "diagnoseTag": "보류"
     },
     {
       "keyword": "수면에도움되는향",
@@ -941,16 +932,16 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "기업힐링프로그램",
-      "pc": 30,
-      "mobile": 10,
+      "keyword": "보습화장품",
+      "pc": 10,
+      "mobile": 30,
       "total": 40,
       "compIdx": "높음",
       "score": 8,
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "보습화장품",
+      "keyword": "수면케어",
       "pc": 10,
       "mobile": 30,
       "total": 40,
@@ -978,6 +969,15 @@
     },
     {
       "keyword": "수면건강식품",
+      "pc": 10,
+      "mobile": 30,
+      "total": 40,
+      "compIdx": "높음",
+      "score": 8,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "수면옷",
       "pc": 10,
       "mobile": 30,
       "total": 40,
@@ -1031,20 +1031,38 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "수면케어",
-      "pc": 5,
-      "mobile": 30,
-      "total": 35,
-      "compIdx": "높음",
-      "score": 7,
-      "diagnoseTag": "검색량부족"
-    },
-    {
       "keyword": "바디케어자격증",
       "pc": 10,
       "mobile": 20,
       "total": 30,
       "compIdx": "높음",
+      "score": 6,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "릴렉스샷",
+      "pc": 10,
+      "mobile": 20,
+      "total": 30,
+      "compIdx": "높음",
+      "score": 6,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "웰니스코어시그니쳐셀렉트",
+      "pc": 5,
+      "mobile": 10,
+      "total": 15,
+      "compIdx": "중간",
+      "score": 6,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "셀렉스릴렉스샷",
+      "pc": 5,
+      "mobile": 10,
+      "total": 15,
+      "compIdx": "중간",
       "score": 6,
       "diagnoseTag": "검색량부족"
     },
@@ -1055,24 +1073,6 @@
       "total": 30,
       "compIdx": "높음",
       "score": 6,
-      "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "릴렉스샷",
-      "pc": 5,
-      "mobile": 20,
-      "total": 25,
-      "compIdx": "높음",
-      "score": 5,
-      "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "힐링방법",
-      "pc": 5,
-      "mobile": 20,
-      "total": 25,
-      "compIdx": "높음",
-      "score": 5,
       "diagnoseTag": "검색량부족"
     },
     {
@@ -1130,11 +1130,11 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "웰니스코어시그니쳐셀렉트",
-      "pc": 5,
-      "mobile": 5,
-      "total": 10,
-      "compIdx": "중간",
+      "keyword": "웰니스디바인듀오",
+      "pc": 10,
+      "mobile": 10,
+      "total": 20,
+      "compIdx": "높음",
       "score": 4,
       "diagnoseTag": "검색량부족"
     },
@@ -1184,16 +1184,7 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "웰니스디바인듀오",
-      "pc": 10,
-      "mobile": 5,
-      "total": 15,
-      "compIdx": "높음",
-      "score": 3,
-      "diagnoseTag": "검색량부족"
-    },
-    {
-      "keyword": "웰니스키튼",
+      "keyword": "힐링방법",
       "pc": 5,
       "mobile": 10,
       "total": 15,
@@ -1202,7 +1193,7 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "민감성스킨케어",
+      "keyword": "웰니스키튼",
       "pc": 5,
       "mobile": 10,
       "total": 15,
@@ -1229,7 +1220,16 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "수면식품",
+      "keyword": "수면에도움",
+      "pc": 5,
+      "mobile": 10,
+      "total": 15,
+      "compIdx": "높음",
+      "score": 3,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "뉴트립맥스릴렉스테아닌",
       "pc": 10,
       "mobile": 5,
       "total": 15,
@@ -1248,6 +1248,15 @@
     },
     {
       "keyword": "힐링인문학",
+      "pc": 5,
+      "mobile": 5,
+      "total": 10,
+      "compIdx": "높음",
+      "score": 2,
+      "diagnoseTag": "검색량부족"
+    },
+    {
+      "keyword": "민감성스킨케어",
       "pc": 5,
       "mobile": 5,
       "total": 10,
@@ -1283,15 +1292,6 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "수면에도움",
-      "pc": 5,
-      "mobile": 5,
-      "total": 10,
-      "compIdx": "높음",
-      "score": 2,
-      "diagnoseTag": "검색량부족"
-    },
-    {
       "keyword": "수면영양제내돈내산",
       "pc": 5,
       "mobile": 5,
@@ -1301,7 +1301,7 @@
       "diagnoseTag": "검색량부족"
     },
     {
-      "keyword": "뉴트립맥스릴렉스테아닌",
+      "keyword": "수면식품",
       "pc": 5,
       "mobile": 5,
       "total": 10,
